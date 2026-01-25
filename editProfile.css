@@ -48,18 +48,6 @@
     z-index: 2;
 }
 
-.title {
-    font-family: robotDreamer;
-    font-size: 4vh;
-    color: white;
-    left: 5vh;
-    display: flex;
-    position: relative;
-    top: 2vh;
-    padding-left: 1.5vh;
-    margin: 0;
-}
-
 .side-panel {
     position: fixed;
     top: 0;
@@ -162,3 +150,245 @@
     padding: 0;
     margin: 0;
  }
+
+
+
+
+
+
+
+ 
+.main-layout {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    height: 100vh;
+    flex-direction: column;
+    padding-top: 1vh;
+}
+
+.title {
+    font-family: robotDreamer;
+    margin: 0 0 2vh 0;
+    color: white;
+    font-weight: bolder;
+    text-align: left;
+    width: inherit;
+    font-size: 4vh;
+    padding-bottom: 0vh;
+    position: absolute;
+    top: 2vh;
+    left: 6vh;
+}
+
+.title-wrapper {
+    width: fit-content;
+    margin: 0 auto;
+}
+
+
+.back-arrow {
+    background-color: transparent;
+    border: none;
+    width: 4vh;
+    height: auto;
+    top: 3vh;
+    left: 2.5vh;
+    position: absolute;
+    z-index: 1;
+    cursor: pointer;
+}
+
+.back-arrow-img {
+    width: inherit;
+    height: inherit;
+}
+
+.imageuploader {
+    font-family: Montserrat;
+    width: 65vh;
+    height: 45vh;
+    border: 2px solid #323d72;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    background-color: #2c446b;
+    overflow: hidden;
+    object-fit: cover;
+    text-align: center;
+    font-size: 4vh;
+    color: rgba(255, 255, 255, 0.522);
+    flex-direction: column;
+}
+
+.imageuploader img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.vertical-layout {
+    display: flex;
+    flex-direction: column;
+}
+
+.imageandrows {
+    display: flex;
+    flex-direction: row;
+    padding-top: 1vh;
+    padding-bottom: 2vh;
+    width: auto;
+
+}
+
+.row1 {
+    display: flex;
+    flex-direction: row !important;
+    padding-bottom: 3vh;
+    padding-left: 7vh;
+}
+
+.row2 {
+    display: flex;
+    flex-direction: row;
+    padding-bottom: 3vh;
+    padding-left: 7vh;
+}
+
+.row3 {
+    padding-left: 7vh;
+    display: flex;
+    flex-direction: row;
+    padding-bottom: 4vh;
+    gap: 2vh;
+}
+
+.row4 {
+    padding-left: 7vh;
+    display: flex;
+    flex-direction: row;
+    gap: 2vh;
+}
+
+
+.skillrow {
+    display: flex;
+    flex-direction: row;
+    width: auto;
+}
+
+.rowslayout{
+    display: flex;
+    flex-direction: column;
+    padding-left: 3vh;
+}
+
+.input-group {
+    display: flex;
+    gap: 20px;
+}
+  
+.field {
+    display: flex;
+    flex-direction: column;
+}
+ 
+
+.field2 {
+    display: flex;
+    flex-direction: column;
+    padding-left: 4vh;
+}
+
+
+label {
+    margin-bottom: 5px; 
+    font-family: Montserrat;
+    color: white;
+    font-size: 2vh;
+}
+
+.labelPreferredName {
+    display: block;
+}
+
+.classDropdown {
+    padding-left: 6vh;
+    padding-top: 2.5vh;
+    align-self: center;
+}
+
+.classDropdown select {
+    width: 40.5vh !important;
+    height: 3.6vh;
+    cursor: pointer;
+}
+
+.buttonLayout {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.personDropdown {
+    padding-left: 0vh;
+    align-self: center;
+    padding-top: 0.5vh;
+}
+
+.personDropdown select {
+    width: 27.5vh !important;
+    height: 3.6vh;
+    cursor: pointer;
+}
+
+
+.saveButton {
+    width: 12vh;
+    height: 4vh;
+    font-size: 1.5vh;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    color: white;
+    font-family: Montserrat;
+    background-color: #6A84BF;
+    font-weight: bold;
+}
+
+
+input[type=text], select {
+    padding: 12px;
+    width: 37.5vh;
+    margin: 8px 0;
+    border: none;
+    border-radius: 4px;
+    background-color: #334E79;
+    color: white;
+}
+
+
+
+.inputTechnicalSkills, .inputSoftSkills {
+    width: 80vh !important;
+    height: 20vh;
+    resize: vertical;
+    box-sizing: border-box;
+    line-height: 1.5;
+    padding: 10px;
+    background-color: #334E79;
+    color: white;
+    border: none;
+}
+
+.centeringstuff {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    padding-bottom: 2vh;
+    padding-top: 0vh;
+    align-items: center;
+}
