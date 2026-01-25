@@ -50,7 +50,7 @@
 
 .title {
     font-family: robotDreamer;
-    font-size: 3.8vh;
+    font-size: 4vh;
     color: white;
     left: 5vh;
     display: flex;
@@ -109,7 +109,7 @@
     text-decoration: none;
     position: relative;
     padding: 1.5vh 2vh;
-    background-color: #2C446B;
+    background-color: #633C9B;
     border-radius: 9px;
     margin: 2vh;
 }
