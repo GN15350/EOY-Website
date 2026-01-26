@@ -188,3 +188,33 @@
     font-size: 3.5vh;
     position: relative;
 }
+
+
+
+
+
+.grid {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    display: grid;
+    position: relative;
+    gap: 10vh;
+    top: 8vh;
+    left: 6vh;
+ }
+
+ .leaderBlock {
+    background-color: #2C656B;
+    width: 50vh;
+    height: 30vh;
+    border-radius: 26px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+ }
+
+ .leaderProfile {
+    width: 20vh;
+    height: auto;
+    border-radius: 50%;
+ }
