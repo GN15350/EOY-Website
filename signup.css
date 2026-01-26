@@ -1,6 +1,14 @@
+body, html {
+    padding: 0;
+    margin: 0;
+    height: 100vh;
+    background-color: transparent;
+    overflow: hidden;
+}
+
 .gradient-bg {
     background: linear-gradient(0deg, #144784, #0f1e30);
-    position: absolute;
+    position: fixed;
     inset: 0;
     z-index: -3;
 }
@@ -12,13 +20,6 @@
     left: 0;
     width: 100%;
     height: auto;
-}
-
-
-body, html {
-    padding: 0;
-    margin: 0;
-    overflow: hidden;
 }
 
 .lines {
@@ -57,7 +58,6 @@ body, html {
     width: 100%;
     height: 100vh;
     flex-direction: column;
-    padding-top: 1vh;
 }
 
 .title {
@@ -184,6 +184,7 @@ body, html {
 .field {
     display: flex;
     flex-direction: column;
+    width: fit-content;
 }
  
 
@@ -264,7 +265,7 @@ input[type=text], select {
 
 .inputTechnicalSkills, .inputSoftSkills {
     width: 80vh !important;
-    height: 20vh;
+    height: 10vh;
     resize: vertical;
     box-sizing: border-box;
     line-height: 1.5;
@@ -272,6 +273,7 @@ input[type=text], select {
     background-color: #334E79;
     color: white;
     border: none;
+    resize: none;
 }
 
 .centeringstuff {
@@ -281,4 +283,25 @@ input[type=text], select {
     padding-bottom: 2vh;
     padding-top: 0vh;
     align-items: center;
+}
+
+.textarea-wrapper {
+    position: relative;
+    width: fit-content;
+}
+
+.techCharCount,
+.softCharCount {
+    position: absolute;
+    bottom: 8px;
+    right: 12px;
+    color: rgba(255, 255, 255, 0.6);
+    font-family: Montserrat;
+    font-size: 1.2vh;
+    pointer-events: none;
+}
+
+.inputTechnicalSkills,
+.inputSoftSkills {
+    padding-bottom: 30px;
 }

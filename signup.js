@@ -15,3 +15,25 @@ profilePicInput.addEventListener('change', (event) => {
         reader.readAsDataURL(file);
     }
 });
+
+
+
+document.addEventListener('DOMContentLoaded', () => {
+    const textarea = document.getElementById('idTechnicalSkills');
+    const charCount = document.getElementById('techCharCount');
+
+    textarea.addEventListener('input', () => {
+        const length = textarea.value.length;
+        charCount.textContent = `${length} / 200`;
+    });
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+    const softTextarea = document.getElementById('idSoftSkills');
+    const softCharCount = document.getElementById('softCharCount');
+
+    softTextarea.addEventListener('input', () => {
+        const length = softTextarea.value.length;
+        softCharCount.textContent = `${length} / 200`;
+    });
+});
