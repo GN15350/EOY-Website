@@ -169,6 +169,7 @@
     font-weight: bolder;
     display: flex;
     position: relative;
+    text-decoration: underline;
     
 }
 
@@ -212,10 +213,11 @@
     justify-content: center;
     align-items: center;
     padding: 2vh;
+    cursor: pointer;
  }
 
  .leaderProfile {
-    width: 30vh;
+    width: 25vh;
     height: auto;
     border-radius: 50%;
  }
@@ -277,9 +279,17 @@
     padding: 5vh;
     border-radius: 26px;
     width: 14vh;
-    max-height: 25vh;
+    max-height: 14vh;
     display: flex;
     flex-direction: column;
     justify-content: center;
     margin: auto;
+    align-items: center;
+    cursor: pointer;
  }
+
+ .memberBlock:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    opacity: 1;
+}
