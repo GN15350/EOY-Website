@@ -200,6 +200,7 @@
     justify-content: center;
     align-items: center;
     gap: 5vh;
+    pointer-events: none;
 }
 
 .userProfile {
@@ -207,6 +208,7 @@
     z-index: 2;
     border-radius: 26px;
     position: relative;
+    pointer-events: all;
 }
 
 .nameCard {
@@ -214,10 +216,12 @@
     font-size: 8vh;
     font-family: robotDreamer;
     margin: 0;
+    pointer-events: all;
 }
 
 .email {
     font-family: Montserrat;
+    pointer-events: all;
 }
 
 .rightColumn {
@@ -228,6 +232,7 @@
     align-items: center;
     justify-content: center;
     height: 100vh;
+    pointer-events: all;
 }
 
 .requestButton {
@@ -243,6 +248,7 @@
     background-color: #6A84BF;
     position: fixed;
     bottom: 4vh;
+    pointer-events: all;
 }
 
 .verticalLayout {
