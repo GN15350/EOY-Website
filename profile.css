@@ -47,7 +47,7 @@
     position: absolute;
     top: 1vh;
     left: 1vh;
-    z-index: 2;
+    z-index: 4;
 }
 
 .title {
@@ -260,7 +260,7 @@
     justify-content: center;
     padding-left: 20vh;
     padding-right: 20vh;
-    margin-bottom: 10vh;
+    margin-bottom: 40vh;
 }
 
 .phoneNumberLabel {

@@ -70,7 +70,7 @@
     width: 25vh;
     height: 100vh;
     background: linear-gradient(0deg, #185CAD, #17304D);
-    z-index: 3;
+    z-index: 6;
 
     transform: translateX(-100%);
     transition: transform 0.3s ease;
@@ -151,48 +151,48 @@
     transition: opacity 0.3s ease;*/
     opacity: 0.65;
     position: absolute;
-    z-index: 2;
+    z-index: 4;
 
     transform: translateX(-100%);
     transition: transform 0.5s ease;
 
 
- }
+}
 
- .overlay.show {
+.overlay.show {
     pointer-events: auto;
     display: block;
 
     transform: translateX(0);
 
     /*opacity: 0.65;*/
-  }
+}
 
- body, html {
+body, html {
     padding: 0;
     margin: 0;
     background: linear-gradient(180deg, #185CAD, #17304D);
     height: 100vh;
     overflow-x: hidden;
- }
+}
 
 
 
 
 
- .grid {
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+.grid {
     display: grid;
-    position: relative;
-    top: 9vh;
-    left: 5vh;
+    grid-template-columns: repeat(auto-fit, 200px); /* fixed card width */
+    justify-content: center; /* center incomplete rows */
+    place-items: center;     /* center cards inside each cell */
     gap: 8.5vh;
-    max-width: 90%;
-    z-index: 2;
     padding: 2vh;
- }
+    margin-top: 9vh;         /* replaces top: 9vh */
+    z-index: 2;
+}
 
- .profileBlock {
+
+.profileBlock {
     background-color: #9BADFF;
     border-radius: 26px;
     display: flex;
@@ -213,13 +213,13 @@
     opacity: 1;
 }
 
- .profileImage {
+.profileImage {
     width: 10vh;
     height: auto;
     border-radius: 50%;
 }
 
- .name {
+.name {
     margin-top: 1vh;
     padding: 0;
     margin-bottom: 0.5vh;
