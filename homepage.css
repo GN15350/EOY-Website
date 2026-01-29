@@ -39,7 +39,7 @@ body, html {
 .header {
     width: 100%;
     padding-top: 1vh;
-    left: 2vh;
+    padding-left: 1vh;
     display: flex;
     flex-direction: row;
     z-index: 2;
