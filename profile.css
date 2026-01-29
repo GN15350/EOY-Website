@@ -254,4 +254,95 @@
 
 .section2 {
     z-index: 2;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-left: 20vh;
+    padding-right: 20vh;
+    margin-bottom: 10vh;
+}
+
+.phoneNumberLabel {
+    font-family: glacialIndifference;
+    font-weight: bold;
+    margin-bottom: 0vh;
+    font-size: 3vh;
+}
+
+.phoneNumber {
+    padding: 1vh;
+    font-family: Montserrat;
+    padding-left: 2vh;
+    padding-right: 2vh;
+    background-color: #323D72;
+    width: fit-content;
+    border-radius: 9px;
+    font-size: 2vh;
+}
+
+.labelRequestedMembers{
+    font-family: glacialIndifference;
+    font-weight: bold;
+    margin-bottom: 0vh;
+    font-size: 3vh;
+}
+
+.requestedMember {
+    padding: 1vh;
+    padding-left: 2vh;
+    padding-right: 2vh;
+    background-color: #323D72;
+    font-family: Montserrat;
+    width: fit-content;
+    border-radius: 9px;
+    font-size: 2vh;
+}
+
+.memberRow {
+    display: flex;
+    flex-direction: row;
+    gap: 2vh;
+}
+
+.technicalSkillsLabel {
+    font-family: glacialIndifference;
+    font-weight: bold;
+    margin-bottom: 0vh;
+    font-size: 3vh;
+}
+
+.technicalSkills {
+    padding: 1vh;
+    padding-left: 2vh;
+    padding-right: 2vh;
+    font-family: Montserrat;
+    background-color: #323D72;
+    width: fit-content;
+    border-radius: 9px;
+    font-size: 2vh;
+}
+
+.softSkillsLabel {
+    font-family: glacialIndifference;
+    font-weight: bold;
+    margin-bottom: 0vh;
+    font-size: 3vh;
+}
+
+.softSkills {
+    padding: 1vh;
+    padding-left: 2vh;
+    padding-right: 2vh;
+    font-family: Montserrat;
+    background-color: #323D72;
+    width: fit-content;
+    border-radius: 9px;
+    font-size: 2vh;
+}
+
+.skillrow {
+    display: flex;
+    flex-direction: row;
+    gap: 4vh;
 }
