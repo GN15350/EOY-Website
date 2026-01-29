@@ -37,6 +37,16 @@
     pointer-events: none;
 }
 
+.header {
+    width: 100%;
+    padding-top: 1dvh;
+    padding-left: 1dvh;
+    display: flex;
+    flex-direction: row;
+    z-index: 3;
+    position: fixed;
+}
+
 .openMenuButton {
     background-color: transparent;
     color: white;
@@ -51,16 +61,13 @@
 
 .title {
     font-family: robotDreamer;
-    font-size: 3.8dvh;
+    font-size: 4dvh;
     color: white;
-    left: 5dvh;
     display: flex;
-    position: relative;
-    top: 2dvh;
-    padding-left: 1.5dvh;
     margin: 0;
+    z-index: 3;
+    padding-top: 0.7dvh;
 }
-
 
 .side-panel {
     position: fixed;
@@ -258,7 +265,8 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-    align-items: center
+    align-items: center;
+    z-index: 1;
 }
 
 .section2 {

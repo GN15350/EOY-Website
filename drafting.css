@@ -33,49 +33,49 @@
     top: 0;
     left: 0;
     width: 100%;
-    height: 100dvh;
+    height: 100vh;
     pointer-events: none;
 }
 
 .openMenuButton {
     background-color: transparent;
     color: white;
-    font-size: 4.2dvh;
+    font-size: 4.2vh;
     border: none;
     cursor: pointer;
     font-family: Montserrat;
+    position: absolute;
+    top: 1vh;
+    left: 1vh;
     z-index: 2;
-    padding-left: 1dvh;
-    padding-right: 1dvh;
 }
 
 .title {
     font-family: robotDreamer;
-    font-size: 3.8dvh;
+    font-size: 3.8vh;
     color: white;
-    left: 5dvh;
+    left: 5vh;
     display: flex;
     position: relative;
-    top: 2dvh;
-    padding-left: 1.5dvh;
+    top: 2vh;
+    padding-left: 1.5vh;
     margin: 0;
 }
-
 
 .side-panel {
     position: fixed;
     top: 0;
     left: 0;
     border-right: 2px solid white;
-    width: 25dvh;
-    height: 100dvh;
+    width: 25vh;
+    height: 100vh;
     background: linear-gradient(0deg, #185CAD, #17304D);
-    z-index: 6;
+    z-index: 3;
 
     transform: translateX(-100%);
     transition: transform 0.3s ease;
 
-    padding: 4dvh 2dvh;
+    padding: 4vh 2vh;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -92,28 +92,28 @@
     cursor: pointer;
     color: white;
     position: absolute;
-    right: 1dvh;
-    top: 0.5dvh;
-    font-size: 2dvh;
+    right: 1vh;
+    top: 0.5vh;
+    font-size: 2vh;
     font-family: glacialIndifference;
     font-weight: bold;
 }
 
 .links {
     display: flex;
-    font-size: 2dvh;
+    font-size: 2vh;
     text-align: center;
-    max-width: 15dvh;
-    min-width: 15dvh;
+    max-width: 15vh;
+    min-width: 15vh;
     justify-content: center;
     color: white;
     font-family: Montserrat;
     text-decoration: none;
     position: relative;
-    padding: 1.5dvh 2dvh;
+    padding: 1.5vh 2vh;
     background-color: #76A5F1;
     border-radius: 9px;
-    margin: 2dvh;
+    margin: 2vh;
 }
 
 .logout-link {
@@ -121,87 +121,78 @@
     margin-top: auto; 
     background-color: transparent; 
     pointer-events: auto;
-    margin-bottom: 6dvh;
+    margin-bottom: 6vh;
 }
 
 .profile-image {
     display: flex;
-    max-width: 15dvh;
-    max-height: 15dvh;
+    max-width: 15vh;
+    max-height: 15vh;
     border-radius: 50%;
 }
 
 .name {
-    margin-bottom: 4dvh;
-    font-size: 2dvh;
+    margin-bottom: 4vh;
+    font-size: 2vh;
     color: white;
     font-family: Montserrat;
 }
 
 .closeButtonImage {
-    width: 2dvh;
-    margin-top: 1dvh;
+    width: 2vh;
+    margin-top: 1vh;
 }
 
 .overlay {
     width: 100%;
-    height: 100dvh;
+    height: 100vh;
     background: linear-gradient(0deg, #185CAD, #17304D);
     /*opacity: 0;
     transition: opacity 0.3s ease;*/
     opacity: 0.65;
     position: absolute;
-    z-index: 4;
+    z-index: 2;
 
     transform: translateX(-100%);
     transition: transform 0.5s ease;
 
 
-}
+ }
 
-.overlay.show {
+ .overlay.show {
     pointer-events: auto;
     display: block;
 
     transform: translateX(0);
 
     /*opacity: 0.65;*/
-}
+  }
 
-body, html {
+ body, html {
     padding: 0;
     margin: 0;
     background: linear-gradient(180deg, #185CAD, #17304D);
-    height: 100dvh;
+    height: 100vh;
     overflow-x: hidden;
-}
-
-.header {
-    width: 100%;
-    padding-top: 1dvh;
-    padding-left: 1dvh;
-    display: flex;
-    flex-direction: row;
-    z-index: 2;
-}
+ }
 
 
 
 
 
-.grid {
+ .grid {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     display: grid;
-    grid-template-columns: repeat(auto-fit, 200px); /* fixed card width */
-    justify-content: center; /* center incomplete rows */
-    place-items: center;     /* center cards inside each cell */
-    gap: 8.5dvh;
-    padding: 2dvh;
-    margin-top: 9dvh;         /* replaces top: 9dvh */
+    position: relative;
+    top: 9vh;
+    left: 5vh;
+    gap: 8.5vh;
+    max-width: 90%;
     z-index: 2;
-}
+    padding: 2vh;
+ }
 
-
-.profileBlock {
+ .profileBlock {
     background-color: #9BADFF;
     border-radius: 26px;
     display: flex;
@@ -209,29 +200,32 @@ body, html {
     justify-content: center;
     align-items: center;
     color: white;
-    height: 20dvh;
-    max-height: 20dvh;
-    width: 25dvh;
-    max-width: 25dvh;
+    height: 20vh;
+    max-height: 20vh;
+    width: 25vh;
+    max-width: 25vh;
     text-align: center;
     opacity: 0.7;
     cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s, opacity 0.2s;
 }
 
 .profileBlock:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
     opacity: 1;
 }
 
-.profileImage {
-    width: 10dvh;
+ .profileImage {
+    width: 10vh;
     height: auto;
     border-radius: 50%;
 }
 
-.name {
-    margin-top: 1dvh;
+ .name {
+    margin-top: 1vh;
     padding: 0;
-    margin-bottom: 0.5dvh;
+    margin-bottom: 0.5vh;
     font-weight: 700;
     font-family: glacialIndifference;
 }
