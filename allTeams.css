@@ -27,6 +27,15 @@
     font-style: normal;
 }
 
+.header {
+    width: 100%;
+    padding-top: 1dvh;
+    padding-left: 1dvh;
+    display: flex;
+    flex-direction: row;
+    z-index: 2;
+}
+
 .lines {
     z-index: 0;
     position: absolute;
@@ -44,10 +53,9 @@
     border: none;
     cursor: pointer;
     font-family: Montserrat;
-    position: absolute;
-    top: 1dvh;
-    left: 1dvh;
     z-index: 2;
+    padding-left: 1dvh;
+    padding-right: 1dvh;
 }
 
 .title {
