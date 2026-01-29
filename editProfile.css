@@ -67,7 +67,7 @@
     width: 25dvh;
     height: 100dvh;
     background: linear-gradient(0deg, #144784, #0F1E30);
-    z-index: 3;
+    z-index: 6;
 
     transform: translateX(-100%);
     transition: transform 0.3s ease;
@@ -148,7 +148,7 @@
     transition: opacity 0.3s ease;*/
     opacity: 0.65;
     position: absolute;
-    z-index: 2;
+    z-index: 4;
 
     transform: translateX(-100%);
     transition: transform 0.5s ease;
@@ -194,7 +194,6 @@
     width: 100%;
     height: 100dvh;
     flex-direction: column;
-    padding-top: 1dvh;
 }
 
 .title-wrapper {
