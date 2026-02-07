@@ -1,4 +1,4 @@
-
+// Edit Profile with auto-fill
 const sidepanel = document.getElementById("side-panel");
 const overlay = document.getElementById("overlay");
 
@@ -32,7 +32,7 @@ imgInp?.addEventListener('change', (e) => {
   }
 });
 
-
+// Char counters
 ['idTechnicalSkills', 'idSoftSkills'].forEach(id => {
   const el = document.getElementById(id);
   const cnt = document.getElementById(id === 'idTechnicalSkills' ? 'techCharCount' : 'softCharCount');
@@ -41,7 +41,7 @@ imgInp?.addEventListener('change', (e) => {
   });
 });
 
-
+// Check auth
 if (!api.getTkn()) {
   window.location.href = 'login.html';
 } else {
@@ -54,7 +54,8 @@ async function loadData() {
     
     if (res.ok) {
       const u = res.data;
-
+      
+      // Auto-fill form
       document.getElementById('idFirstName').value = u.fn || '';
       document.getElementById('idLastName').value = u.ln || '';
       document.getElementById('idPreferredName').value = u.pn || '';
@@ -64,15 +65,16 @@ async function loadData() {
       document.getElementById('idTechnicalSkills').value = u.ts || '';
       document.getElementById('idSoftSkills').value = u.ss || '';
 
-
+      // Update char counts
       document.getElementById('techCharCount').textContent = `${(u.ts || '').length} / 200`;
       document.getElementById('softCharCount').textContent = `${(u.ss || '').length} / 200`;
 
+      // Show profile pic
       if (u.pp) {
         imgUpl.innerHTML = `<img src="https://eoyapi.monty.my${u.pp}" alt="Profile">`;
       }
 
-
+      // Update sidebar
       const nm = document.querySelector('.side-panel .name');
       if (nm) nm.textContent = `${u.pn || u.fn} ${u.ln}`;
     }
@@ -81,7 +83,7 @@ async function loadData() {
   }
 }
 
-
+// Save button
 const saveBtn = document.querySelector('.saveButton');
 saveBtn?.addEventListener('click', async () => {
   const fn = document.getElementById('idFirstName').value.trim();
@@ -133,6 +135,7 @@ saveBtn?.addEventListener('click', async () => {
   }
 });
 
+// Logout
 document.querySelector('.logout-link')?.addEventListener('click', (e) => {
   e.preventDefault();
   if (confirm('Logout?')) {

@@ -1,3 +1,4 @@
+// Drafting page - CS1 students only
 const sidepanel = document.getElementById("side-panel");
 const overlay = document.getElementById("overlay");
 
@@ -15,6 +16,7 @@ overlay?.addEventListener("click", closeMenu);
 
 let currUsr = null;
 
+// Check auth
 if (!api.getTkn()) {
   window.location.href = 'login.html';
 } else {
@@ -26,13 +28,15 @@ async function loadCurrUsr() {
     const res = await api.req('/usr/profile');
     if (res.ok) {
       currUsr = res.data;
-
+      
+      // Update sidebar
       const nm = document.querySelector('.side-panel .name');
       if (nm) nm.textContent = `${currUsr.pn || currUsr.fn} ${currUsr.ln}`;
       
       const img = document.querySelector('.side-panel .profile-image');
       if (img && currUsr.pp) img.src = `https://eoyapi.monty.my${currUsr.pp}`;
       
+      // Load all users for drafting
       loadAllUsrs();
     }
   } catch (e) {
@@ -85,41 +89,16 @@ function renderUsrs(usrs) {
     blk.appendChild(cls);
     
     blk.onclick = () => {
-      if (currUsr && currUsr.cl === 'CS1') {
-        if (confirm(`Request ${u.pn || u.fn} ${u.ln} as team member?`)) {
-          sendReq(u);
-        }
-      } else {
-        alert('Only CS1 students can send member requests');
-      }
+      // Store user ID and go to profile page
+      localStorage.setItem('viewUid', u.id);
+      window.location.href = 'profile.html';
     };
     
     grd.appendChild(blk);
   });
 }
 
-async function sendReq(usr) {
-  try {
-    const res = await api.req('/usr/request', {
-      m: 'POST',
-      body: { 
-        toId: usr.id,
-        toEm: usr.em,
-        toNm: `${usr.pn || usr.fn} ${usr.ln}`
-      }
-    });
-    
-    if (res.ok) {
-      alert(`Request sent to ${usr.pn || usr.fn} ${usr.ln}!`);
-    } else {
-      alert(res.msg || 'Failed to send request');
-    }
-  } catch (e) {
-    console.error(e);
-    alert('Error sending request');
-  }
-}
-
+// Logout
 document.querySelector('.logout-link')?.addEventListener('click', (e) => {
   e.preventDefault();
   if (confirm('Logout?')) {

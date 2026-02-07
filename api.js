@@ -1,5 +1,6 @@
+// API Configuration - Cloudflare Tunnel
 const api = {
-  url: 'https://eoyapi.monty.my',
+  url: 'https://eoyapi.monty.my/api',
   
   getTkn() {
     return localStorage.getItem('tkn');
@@ -32,14 +33,26 @@ const api = {
       cfg.body = JSON.stringify(opt.body);
     }
     
-    const res = await fetch(this.url + ep, cfg);
-    const dat = await res.json();
+    console.log('API Request:', cfg.method, this.url + ep);
+    console.log('Request config:', cfg);
     
-    if (!dat.ok && res.status === 401) {
-      this.clr();
-      window.location.href = 'login.html';
+    try {
+      const res = await fetch(this.url + ep, cfg);
+      console.log('Response status:', res.status, res.statusText);
+      
+      const dat = await res.json();
+      console.log('Response data:', dat);
+      
+      if (!dat.ok && res.status === 401) {
+        this.clr();
+        window.location.href = 'login.html';
+      }
+      
+      return dat;
+    } catch (err) {
+      console.error('Fetch error:', err);
+      console.error('URL was:', this.url + ep);
+      throw err;
     }
-    
-    return dat;
   }
 };

@@ -1,4 +1,4 @@
-
+// Profile viewing page
 const sidepanel = document.getElementById("side-panel");
 const overlay = document.getElementById("overlay");
 
@@ -17,7 +17,7 @@ overlay?.addEventListener("click", closeMenu);
 let currUsr = null;
 let viewUsrId = localStorage.getItem('viewUid');
 
-
+// Check auth
 if (!api.getTkn()) {
   window.location.href = 'login.html';
 } else {
@@ -50,34 +50,35 @@ async function loadViewUsr() {
     if (res.ok) {
       const u = res.data;
       
-
+      // Update profile image
       const profImg = document.querySelector('.userProfile');
       if (profImg) profImg.src = u.pp ? `https://eoyapi.monty.my${u.pp}` : 'elements/userProfile.png';
       
-
+      // Update name
       const nmCard = document.querySelector('.nameCard');
       if (nmCard) nmCard.textContent = `${(u.pn || u.fn).toUpperCase()} ${u.ln.toUpperCase()}`;
       
-
+      // Update email
       const emlElem = document.querySelector('.email');
       if (emlElem) emlElem.textContent = u.em;
       
-
+      // Update phone
       const phnElem = document.querySelector('.phoneNumber');
       if (phnElem) phnElem.textContent = u.ph || '###-###-####';
       
-
+      // Update technical skills
       const techSkills = document.querySelector('.technicalSkills');
       if (techSkills) techSkills.textContent = u.ts || 'No technical skills listed';
       
-
+      // Update soft skills
       const sftSkills = document.querySelector('.softSkills');
       if (sftSkills) sftSkills.textContent = u.ss || 'No soft skills listed';
-
+      
+      // Update class title
       const ttl = document.querySelector('.title');
       if (ttl) ttl.textContent = u.cl;
       
-
+      // Handle request button
       const reqBtn = document.querySelector('.requestButton');
       if (reqBtn) {
         if (currUsr && currUsr.cl === 'CS1') {
@@ -116,7 +117,7 @@ async function sendReq(usr) {
   }
 }
 
-
+// Logout
 document.querySelector('.logout-link')?.addEventListener('click', (e) => {
   e.preventDefault();
   if (confirm('Logout?')) {

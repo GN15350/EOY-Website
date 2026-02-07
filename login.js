@@ -1,4 +1,4 @@
-
+// Login functionality
 const frm = document.querySelector('form');
 const emInp = document.getElementById('idusername');
 const pwInp = document.getElementById('idpassword');
@@ -63,7 +63,7 @@ frm?.addEventListener('submit', async (e) => {
   }
 });
 
-
+// Test API connection on load
 window.addEventListener('DOMContentLoaded', () => {
   console.log('Testing API connection...');
   fetch('https://eoyapi.monty.my/api/auth/login', {

@@ -6,12 +6,12 @@ const { qry, run, get } = require('../cfg/db');
 
 const sec = 'your_secret_key_12345';
 
-
+// Register
 rtr.post('/register', async (req, res) => {
   try {
     const { fn, ln, pn, em, pw, ph, cl, ts, ss } = req.body;
 
-
+    // Validate required fields
     if (!fn || !ln || !em || !pw || !cl) {
       return res.status(400).json({ ok: false, msg: 'Missing required fields' });
     }
@@ -38,7 +38,7 @@ rtr.post('/register', async (req, res) => {
   }
 });
 
-
+// Login
 rtr.post('/login', async (req, res) => {
   try {
     const { em, pw } = req.body;
@@ -63,7 +63,7 @@ rtr.post('/login', async (req, res) => {
   }
 });
 
-
+// Verify token middleware
 const vrf = async (req, res, nxt) => {
   const tkn = req.headers.authorization?.split(' ')[1];
   if (!tkn) {

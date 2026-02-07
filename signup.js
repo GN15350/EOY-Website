@@ -1,4 +1,4 @@
-
+// Signup functionality
 const imgUpl = document.getElementById('imageUploader');
 const imgInp = document.getElementById('profilePic');
 const subBtn = document.getElementById('submitButton') || document.querySelector('.submitButton');
@@ -18,7 +18,7 @@ imgInp?.addEventListener('change', (e) => {
   }
 });
 
-
+// Char counters
 ['idTechnicalSkills', 'idSoftSkills'].forEach(id => {
   const el = document.getElementById(id);
   const cnt = document.getElementById(id === 'idTechnicalSkills' ? 'techCharCount' : 'softCharCount');
@@ -27,7 +27,7 @@ imgInp?.addEventListener('change', (e) => {
   });
 });
 
-
+// Submit
 subBtn?.addEventListener('click', async () => {
   const fn = document.getElementById('idFirstName').value.trim();
   const ln = document.getElementById('idLastName').value.trim();
@@ -69,13 +69,22 @@ subBtn?.addEventListener('click', async () => {
       api.setTkn(res.tkn, res.uid);
 
       if (imgFile) {
-        const fd = new FormData();
-        fd.append('pic', imgFile);
-        await fetch('https://eoyapi.monty.my/api/usr/profile/pic', {
-          method: 'POST',
-          headers: { Authorization: `Bearer ${res.tkn}` },
-          body: fd
-        });
+        try {
+          const fd = new FormData();
+          fd.append('pic', imgFile);
+          const picRes = await fetch('https://eoyapi.monty.my/api/usr/profile/pic', {
+            method: 'POST',
+            headers: { Authorization: `Bearer ${res.tkn}` },
+            body: fd
+          });
+          
+          if (!picRes.ok) {
+            console.error('Profile pic upload failed:', await picRes.text());
+          }
+        } catch (picErr) {
+          console.error('Profile pic upload error:', picErr);
+          // Continue anyway - account is created
+        }
       }
 
       window.location.href = 'homepage.html';

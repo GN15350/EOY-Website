@@ -14,7 +14,7 @@ const upl = mult({
   })
 });
 
-
+// Get profile
 rtr.get('/profile', vrf, async (req, res) => {
   try {
     const u = await get('SELECT id, fn, ln, pn, em, ph, cl, pp, ts, ss FROM users WHERE id = ?', [req.uid]);
@@ -28,7 +28,7 @@ rtr.get('/profile', vrf, async (req, res) => {
   }
 });
 
-
+// Update profile
 rtr.put('/profile', vrf, async (req, res) => {
   try {
     const { fn, ln, pn, ph, cl, ts, ss } = req.body;
@@ -46,7 +46,7 @@ rtr.put('/profile', vrf, async (req, res) => {
   }
 });
 
-
+// Upload picture
 rtr.post('/profile/pic', vrf, upl.single('pic'), async (req, res) => {
   try {
     if (!req.file) {
@@ -63,7 +63,7 @@ rtr.post('/profile/pic', vrf, upl.single('pic'), async (req, res) => {
   }
 });
 
-
+// Get all users (for dropdown)
 rtr.get('/all', vrf, async (req, res) => {
   try {
     const usrs = await qry('SELECT id, fn, ln, pn, cl, em, pp FROM users WHERE id != ? ORDER BY fn, ln', [req.uid]);
@@ -74,7 +74,7 @@ rtr.get('/all', vrf, async (req, res) => {
   }
 });
 
-
+// Get user by ID
 rtr.get('/:id', vrf, async (req, res) => {
   try {
     const u = await get('SELECT id, fn, ln, pn, em, ph, cl, pp, ts, ss FROM users WHERE id = ?', [req.params.id]);
@@ -88,10 +88,10 @@ rtr.get('/:id', vrf, async (req, res) => {
   }
 });
 
-
+// Send member request (CS1 only)
 rtr.post('/request', vrf, async (req, res) => {
   try {
-
+    // Check if requester is CS1
     const req_usr = await get('SELECT cl FROM users WHERE id = ?', [req.uid]);
     if (!req_usr || req_usr.cl !== 'CS1') {
       return res.status(403).json({ ok: false, msg: 'Only CS1 students can send requests' });
@@ -99,21 +99,19 @@ rtr.post('/request', vrf, async (req, res) => {
 
     const { toId, toEm, toNm } = req.body;
 
+    // Get requester info
     const frm = await get('SELECT fn, ln, pn, em FROM users WHERE id = ?', [req.uid]);
     const frmNm = `${frm.pn || frm.fn} ${frm.ln}`;
 
-
+    // Send email (simulated - in real app, use nodemailer)
     console.log(`\n📧 EMAIL SENT:`);
     console.log(`To: ${toEm}`);
     console.log(`Subject: Team Member Request from ${frmNm}`);
     console.log(`Body: ${frmNm} (${frm.em}) wants to work with you on their CS project team!`);
-    console.log(`\n`);
+    console.log(`Reply to accept or decline this request.\n`);
 
-
-    await run(
-      'INSERT INTO members (uid, tid, rol) VALUES (?, 0, ?)',
-      [toId, 'pending']
-    );
+    // Note: In production, store this in a separate requests table
+    // For now, just send the email notification
 
     res.json({ ok: true, msg: 'Request sent and email delivered' });
   } catch (e) {

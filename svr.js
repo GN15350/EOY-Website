@@ -1,12 +1,13 @@
 const exp = require('express');
-const cors = require('cors');
 const pth = require('path');
 const fs = require('fs');
 
 const app = exp();
 const prt = 3000;
 
-app.use(cors());
+// CORS is handled by Cloudflare Transform Rules
+// No CORS middleware needed here
+
 app.use(exp.json());
 app.use('/uplds', exp.static('uplds'));
 
@@ -20,7 +21,7 @@ const usrRtr = require('./rts/usr');
 app.use('/api/auth', authRtr);
 app.use('/api/usr', usrRtr);
 
-app.listen(prt, () => {
+app.listen(prt, '0.0.0.0', () => {
   console.log(`\n✅ Server running on port ${prt}\n`);
   console.log('Endpoints:');
   console.log('  POST /api/auth/register');

@@ -1,0 +1,13 @@
+tunnel: eoy-project
+credentials-file: C:\Users\julia\.cloudflared\19a5c862-f8a0-49ae-87cf-e41682f2a4eb.json
+
+ingress:
+  - hostname: eoyapi.monty.my
+    service: http://127.0.0.1:3000
+    originRequest:
+      noTLSVerify: true
+      connectTimeout: 30s
+      http2Origin: false
+      disableChunkedEncoding: true
+      httpHostHeader: eoyapi.monty.my
+  - service: http_status:404

@@ -1,4 +1,4 @@
-
+// Homepage/other pages
 const sidepanel = document.getElementById("side-panel");
 const overlay = document.getElementById("overlay");
 
@@ -14,7 +14,7 @@ function closeMenu() {
 
 overlay?.addEventListener("click", closeMenu);
 
-
+// Check auth
 if (!api.getTkn()) {
   window.location.href = 'login.html';
 } else {
@@ -37,7 +37,7 @@ async function loadUsr() {
   }
 }
 
-
+// Logout
 document.querySelector('.logout-link')?.addEventListener('click', (e) => {
   e.preventDefault();
   if (confirm('Logout?')) {
