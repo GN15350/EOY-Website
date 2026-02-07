@@ -316,6 +316,7 @@ body, html {
     width: 30vw;
     height: 30vw;
     border-radius: 22px;
+    position: relative;
 }
 
 .checklistTitle {
@@ -332,6 +333,9 @@ body, html {
     color: white;
     font-size: 2.5vh;
     font-family: Montserrat;
+    display: flex;
+    align-items: center;
+    gap: 1vh;
 }
 
 .statusBlock {
@@ -372,14 +376,40 @@ body, html {
     gap: 5vh;
 }
 
-
 .history-popup {
     display: none;
 }
 
 
-.plusC {
-    width: 2vh;
+.plusC,
+.plusS {
+    width: 3vh;
     z-index: 4;
     display: block;
+    position: absolute;
+    bottom: 2vh;
+    right: 2vh;
+    cursor: pointer;
+}
+
+
+
+
+
+
+
+
+
+
+
+.checklistP input[type="checkbox"]:checked + span {
+  text-decoration: line-through;
+  opacity: 0.6;
+}
+
+
+.checklistP input[type="checkbox"] {
+    accent-color: #49318f;
+    width: 18px;
+    height: 18px;
 }
