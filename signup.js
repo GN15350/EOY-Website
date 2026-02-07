@@ -71,7 +71,7 @@ subBtn?.addEventListener('click', async () => {
       if (imgFile) {
         const fd = new FormData();
         fd.append('pic', imgFile);
-        await fetch('https://eoyapi.monty.my/api/usr/profile/pic', {
+        await fetch(api.url + '/usr/profile/pic', {
           method: 'POST',
           headers: { Authorization: `Bearer ${res.tkn}` },
           body: fd

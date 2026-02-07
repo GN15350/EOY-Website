@@ -1,6 +1,10 @@
 // Homepage/other pages
 const sidepanel = document.getElementById("side-panel");
 const overlay = document.getElementById("overlay");
+const wrapper = document.querySelector(".pageWrapper");
+const arrowLeft = document.querySelector(".arrow-left");
+const arrowRight = document.querySelector(".arrow-right");
+let activeSection = 0;
 
 function openMenu() {
   sidepanel.classList.add("open");
@@ -13,6 +17,35 @@ function closeMenu() {
 }
 
 overlay?.addEventListener("click", closeMenu);
+
+function updateSectionNav() {
+  if (wrapper) {
+    wrapper.style.transform = activeSection === 0 ? "translateX(0)" : "translateX(-100vw)";
+  }
+
+  if (arrowLeft) {
+    arrowLeft.classList.toggle("arrow-disabled", activeSection === 0);
+  }
+  if (arrowRight) {
+    arrowRight.classList.toggle("arrow-disabled", activeSection === 1);
+  }
+}
+
+arrowLeft?.addEventListener("click", () => {
+  if (activeSection > 0) {
+    activeSection -= 1;
+    updateSectionNav();
+  }
+});
+
+arrowRight?.addEventListener("click", () => {
+  if (activeSection < 1) {
+    activeSection += 1;
+    updateSectionNav();
+  }
+});
+
+updateSectionNav();
 
 // Check auth
 if (!api.getTkn()) {

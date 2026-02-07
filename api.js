@@ -1,6 +1,14 @@
-// API Configuration - Cloudflare Tunnel
+// API Configuration - Cloudflare Tunnel (prod) / local dev
 const api = {
-  url: 'https://eoyapi.monty.my/api',
+  url: (() => {
+    try {
+      const h = window.location.hostname;
+      if (h === 'localhost' || h === '127.0.0.1' || h === '::1' || h === '::' || h === '') {
+        return 'http://127.0.0.1:3000/api';
+      }
+    } catch (_) {}
+    return 'https://eoyapi.monty.my/api';
+  })(),
   
   getTkn() {
     return localStorage.getItem('tkn');

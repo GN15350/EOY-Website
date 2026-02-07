@@ -1,12 +1,14 @@
 const exp = require('express');
 const pth = require('path');
 const fs = require('fs');
+const cors = require('cors');
 
 const app = exp();
 const prt = 3000;
 
 // CORS is handled by Cloudflare Transform Rules
-// No CORS middleware needed here
+// In local dev we still need CORS to allow the frontend to hit the API.
+app.use(cors());
 
 app.use(exp.json());
 app.use('/uplds', exp.static('uplds'));
@@ -20,6 +22,9 @@ const usrRtr = require('./rts/usr');
 
 app.use('/api/auth', authRtr);
 app.use('/api/usr', usrRtr);
+app.get('/api/health', (req, res) => {
+  res.json({ ok: true });
+});
 
 app.listen(prt, '0.0.0.0', () => {
   console.log(`\n✅ Server running on port ${prt}\n`);

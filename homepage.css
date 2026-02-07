@@ -1,14 +1,6 @@
-.gradient-bg {
-    background: linear-gradient(0deg, #150F34, #49318f);
-    pointer-events: none;
-    position: absolute;
-    inset: 0;
-    z-index: 0;
-}
-
 body, html {
     overflow-x: hidden;
-    background: linear-gradient(180deg, #150F34, #49318f);
+    background: linear-gradient(0deg, #150F34, #49318f);
     padding: 0;
     margin: 0;
     height: 100vh;
@@ -383,4 +375,11 @@ body, html {
 
 .history-popup {
     display: none;
+}
+
+
+.plusC {
+    width: 2vh;
+    z-index: 4;
+    display: block;
 }

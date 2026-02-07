@@ -66,14 +66,12 @@ frm?.addEventListener('submit', async (e) => {
 // Test API connection on load
 window.addEventListener('DOMContentLoaded', () => {
   console.log('Testing API connection...');
-  fetch('https://eoyapi.monty.my/api/auth/login', {
-    method: 'OPTIONS'
-  })
-  .then(res => {
-    console.log('API connection test:', res.ok ? 'SUCCESS' : 'FAILED');
-  })
-  .catch(e => {
-    console.error('API connection test FAILED:', e.message);
-    alert('Warning: Cannot connect to backend server!\n\nMake sure you ran:\nnpm start');
-  });
+  fetch(api.url + '/health')
+    .then(res => {
+      console.log('API connection test:', res.ok ? 'SUCCESS' : 'FAILED');
+    })
+    .catch(e => {
+      console.error('API connection test FAILED:', e.message);
+      alert('Warning: Cannot connect to backend server!\n\nMake sure you ran:\nnpm start');
+    });
 });
