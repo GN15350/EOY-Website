@@ -1,5 +1,5 @@
 const api = {
-  url: 'https://eoyapi.monty.my',
+  url: 'http://localhost:3000',
   
   getTkn() {
     return localStorage.getItem('tkn');

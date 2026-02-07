@@ -30,7 +30,7 @@ async function loadUsr() {
       if (nm) nm.textContent = `${u.pn || u.fn} ${u.ln}`;
       
       const img = document.querySelector('.side-panel .profile-image');
-      if (img && u.pp) img.src = `https://eoyapi.monty.my${u.pp}`;
+      if (img && u.pp) img.src = `http://localhost:3000${u.pp}`;
     }
   } catch (e) {
     console.error(e);

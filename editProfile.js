@@ -69,7 +69,7 @@ async function loadData() {
       document.getElementById('softCharCount').textContent = `${(u.ss || '').length} / 200`;
 
       if (u.pp) {
-        imgUpl.innerHTML = `<img src="https://eoyapi.monty.my${u.pp}" alt="Profile">`;
+        imgUpl.innerHTML = `<img src="http://localhost:3000${u.pp}" alt="Profile">`;
       }
 
 

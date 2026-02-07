@@ -66,7 +66,7 @@ frm?.addEventListener('submit', async (e) => {
 
 window.addEventListener('DOMContentLoaded', () => {
   console.log('Testing API connection...');
-  fetch('https://eoyapi.monty.my/api/auth/login', {
+  fetch('http://localhost:3000/api/auth/login', {
     method: 'OPTIONS'
   })
   .then(res => {
