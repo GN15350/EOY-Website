@@ -11,7 +11,7 @@ body, html {
     background: linear-gradient(180deg, #150F34, #49318f);
     padding: 0;
     margin: 0;
-    height: 100dvh;
+    height: 100vh;
     width: 100%;
  }
 
@@ -38,11 +38,12 @@ body, html {
 
 .header {
     width: 100%;
-    padding-top: 1dvh;
-    padding-left: 1dvh;
+    padding-top: 1vh;
+    padding-left: 1vh;
     display: flex;
     flex-direction: row;
     z-index: 2;
+    height: 6vh;
 }
 
 .lines {
@@ -52,29 +53,19 @@ body, html {
     top: 0;
     left: 0;
     width: 100%;
-    height: 100dvh;
+    height: 100vh;
 }
 
 .openMenuButton {
     background-color: transparent;
     color: white;
-    font-size: 4.2dvh;
+    font-size: 4.2vh;
     border: none;
     cursor: pointer;
     font-family: Montserrat;
     z-index: 2;
-    padding-left: 1dvh;
-    padding-right: 1dvh;
-}
-
-.title {
-    font-family: robotDreamer;
-    font-size: 4dvh;
-    color: white;
-    display: flex;
-    margin: 0;
-    z-index: 2;
-    padding-top: 0.7dvh;
+    padding-left: 1vh;
+    padding-right: 1vh;
 }
 
 .side-panel {
@@ -82,15 +73,15 @@ body, html {
     top: 0;
     left: 0;
     border-right: 2px solid white;
-    width: 25dvh;
-    height: 100dvh;
+    width: 25vh;
+    height: 100vh;
     background: linear-gradient(0deg, #251B54, #5E42AF);
     z-index: 6;
 
     transform: translateX(-100%);
     transition: transform 0.3s ease;
 
-    padding: 4dvh 2dvh;
+    padding: 4vh 2vh;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -107,28 +98,28 @@ body, html {
     cursor: pointer;
     color: white;
     position: absolute;
-    right: 1dvh;
-    top: 0.5dvh;
-    font-size: 2dvh;
+    right: 1vh;
+    top: 0.5vh;
+    font-size: 2vh;
     font-family: glacialIndifference;
     font-weight: bold;
 }
 
 .links {
     display: flex;
-    font-size: 2dvh;
+    font-size: 2vh;
     text-align: center;
-    max-width: 15dvh;
-    min-width: 15dvh;
+    max-width: 15vh;
+    min-width: 15vh;
     justify-content: center;
     color: white;
     font-family: Montserrat;
     text-decoration: none;
     position: relative;
-    padding: 1.5dvh 2dvh;
+    padding: 1.5vh 2vh;
     background-color: #633C9B;
     border-radius: 9px;
-    margin: 2dvh;
+    margin: 2vh;
 }
 
 .logout-link {
@@ -136,37 +127,37 @@ body, html {
     margin-top: auto; 
     background-color: transparent; 
     pointer-events: auto;
-    margin-bottom: 6dvh;
+    margin-bottom: 6vh;
 }
 
 .profile-image {
     display: flex;
-    max-width: 15dvh;
-    max-height: 15dvh;
+    max-width: 15vh;
+    max-height: 15vh;
     border-radius: 50%;
 }
 
 .name {
-    margin-bottom: 4dvh;
-    font-size: 2dvh;
+    margin-bottom: 4vh;
+    font-size: 2vh;
     color: white;
     font-family: Montserrat;
 }
 
 .closeButtonImage {
-    width: 2dvh;
-    margin-top: 1dvh;
+    width: 2vh;
+    margin-top: 1vh;
 }
 
 .overlay {
     width: 100%;
-    height: 100dvh;
+    height: 100vh;
     background: linear-gradient(0deg, #251B54, #5E42AF);
     /*opacity: 0;
     transition: opacity 0.3s ease;*/
     opacity: 0.65;
     position: absolute;
-    z-index: 4;
+    z-index: 6;
 
     transform: translateX(-100%);
     transition: transform 0.5s ease;
@@ -181,4 +172,215 @@ body, html {
     transform: translateX(0);
 
     /*opacity: 0.65;*/
+}
+
+.section1 {
+    margin-top: 10vh;
+    z-index: 4;
+    display: flex;
+    width: 100vw;
+    height: 100vh;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    position: relative;
+    flex-shrink: 0;
+}
+
+.title {
+    font-family: robotDreamer;
+    font-size: 8vh;
+    color: white;
+    display: flex;
+    margin: 0;
+    z-index: 2;
+    width: fit-content;
+    margin-bottom: 3vh;
+}
+
+.projectBlock {
+    margin-bottom: 4vh;
+    z-index: 4;
+    background-color: #633C9B;
+    min-width: 60%;
+    max-width: 60%;
+    border-radius: 30px;
+    width: fit-content;
+    padding: 4vh;
+    padding-top: 3vh;
+    padding-bottom: 3vh;
+    height: fit-content;
+    text-align: center;
+    font-family: Montserrat;
+    margin-top: 3vh;
+    margin-bottom: 3vh;
+}
+
+.projectTitle {
+    z-index: 4;
+    color: white;
+    font-weight: bold;
+    padding: 1vh;
+    font-size: 3vh;
+}
+
+.projectDescription {
+    z-index: 4;
+    color: white;
+    padding: 1vh;
+    font-size: 3vh;
+}
+
+.memberGrid {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    color: white;
+    min-width: 70%;
+    max-width: 70%;
+    flex-wrap: wrap;
+}
+
+.memberBlock {
+    display: flex;
+    flex-direction: column;
+    background-color: #633C9B;
+    margin: 2vh;
+    padding: 3vh;
+    width: 20vh;
+    border-radius: 44px;
+    height: 17vh;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-family: Montserrat;
+}
+
+.pfpHome {
+    width: 10vh;
+    margin-bottom: 2vh;
+}
+
+.arrow-right {
+    object-fit: contain;
+    z-index: 4;
+    width: 3vh;
+    display: block;
+    position: fixed;
+    right: 4vh;
+    top: 50%;
+    cursor: pointer;
+}
+
+.arrow-left {
+    object-fit: contain;
+    z-index: 4;
+    width: 3vh;
+    display: block;
+    position: fixed;
+    left: 4vh;
+    top: 50%;
+    cursor: pointer;
+}
+
+.pageWrapper {
+    display: flex;
+    flex-direction: row;
+    width: 200vw;
+    height: 100vh;
+    transition: transform 0.6s ease;
+}
+
+.section2 {
+    position: relative;
+    z-index: 4;
+    display: flex;
+    width: 100vw;
+    height: 100vh;
+    align-items: center;
+    flex-direction: column;
+    flex-shrink: 0;
+}
+
+.arrow-disabled {
+    opacity: 0.3;
+    pointer-events: none;
+}
+
+.title2 {
+    font-family: robotDreamer;
+    font-size: 8vh;
+    color: white;
+    display: flex;
+    margin: 0;
+    width: fit-content;
+    margin-bottom: 3vh;
+}
+
+.checklistBlock {
+    background: #633C9B;
+    display: flex;
+    flex-direction: column;
+    width: 30vw;
+    height: 30vw;
+    border-radius: 22px;
+}
+
+.checklistTitle {
+    padding-top: 2vh;
+    padding-left: 4vh;
+    color: white;
+    font-size: 2.5vh;
+    font-weight: bold;
+    font-family: Montserrat;
+}
+
+.checklistP {
+    padding-left: 4vh;
+    color: white;
+    font-size: 2.5vh;
+    font-family: Montserrat;
+}
+
+.statusBlock {
+    width: 30vw;
+    background: #633C9B;
+    height: 30vw;
+    border-radius: 22px;
+    position: relative;
+}
+
+.history {
+    width: 3vh;
+    position: absolute;
+    right: 2.5vh;
+    top: 2vh;
+    cursor: pointer;
+}
+
+.statusTitle {
+    padding-top: 2vh;
+    padding-left: 4vh;
+    color: white;
+    font-size: 2.5vh;
+    font-weight: bold;
+    font-family: Montserrat;
+}
+
+.statusP {
+    padding-left: 4vh;
+    color: white;
+    font-size: 2.5vh;
+    font-family: Montserrat;
+}
+
+.row {
+    display: flex;
+    flex-direction: row;
+    gap: 5vh;
+}
+
+
+.history-popup {
+    display: none;
 }
