@@ -1,13 +1,15 @@
 body, html {
     padding: 0;
     margin: 0;
+    background-color: #261b66;
+    z-index: 0;
 }
 
 .gradient-bg {
     background-color: #261b66;
     position: absolute;
     inset: 0;
-    z-index: -3;
+    z-index: -1;
 }
 
 @font-face {
@@ -37,6 +39,7 @@ body, html {
     border: 5px solid #A985DF;
     border-radius: 36px;
     background: linear-gradient(0deg, #49318f, #1f1750);
+    z-index: 4;
 }
 
 .main-layout {
@@ -126,12 +129,13 @@ input[type=submit]:hover {
 }
 
 .lines {
-    z-index: -1;
+    z-index: 0;
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100dvh;
+    object-fit: cover;
 }
 
 .back-arrow {
@@ -149,4 +153,17 @@ input[type=submit]:hover {
 .back-arrow-img {
     width: inherit;
     height: inherit;
+}
+
+
+@media (max-width: 1100px){ 
+    .square-layout {
+        width: 90vw;
+    }
+    .square {
+        width: 90vw;
+    }
+    .title {
+        width: 90vw;
+    }
 }

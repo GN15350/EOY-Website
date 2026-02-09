@@ -1,36 +1,3 @@
-body, html {
-    padding: 0;
-    margin: 0;
-    height: 100dvh;
-    background-color: transparent;
-    overflow: hidden;
-}
-
-.gradient-bg {
-    background: linear-gradient(0deg, #144784, #0f1e30);
-    position: fixed;
-    inset: 0;
-    z-index: -3;
-}
-
-.backgroundthing {
-    z-index: -1;
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: auto;
-}
-
-.lines {
-    z-index: -1;
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100dvh;
-}
-
 @font-face {
     font-family: 'Montserrat';
     src: url('fonts/Montserrat-VariableFont_wght.ttf') format('truetype');
@@ -52,13 +19,34 @@ body, html {
     font-style: normal;
 }
 
-.main-layout {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+.header {
     width: 100%;
-    height: 100dvh;
-    flex-direction: column;
+    padding-top: 1vh;
+    padding-left: 1vh;
+    display: flex;
+    flex-direction: row;
+    z-index: 2;
+}
+
+.lines {
+    z-index: -1;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+}
+
+.openMenuButton {
+    background-color: transparent;
+    color: white;
+    font-size: 4.2vh;
+    border: none;
+    cursor: pointer;
+    font-family: Montserrat;
+    z-index: 2;
+    padding-left: 1vh;
+    padding-right: 1vh;
 }
 
 .title {
@@ -78,13 +66,151 @@ body, html {
 }
 
 
+.side-panel {
+    position: fixed;
+    top: 0;
+    left: 0;
+    border-right: 2px solid white;
+    width: 25vh;
+    height: 100vh;
+    background: linear-gradient(0deg, #144784, #0F1E30);
+    z-index: 6;
+
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+
+    padding: 4vh 2vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+}
+
+.side-panel.open {
+    transform: translateX(0);
+}
+
+.closeButton {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    color: white;
+    position: absolute;
+    right: 1vh;
+    top: 0.5vh;
+    font-size: 2vh;
+    font-family: glacialIndifference;
+    font-weight: bold;
+}
+
+.links {
+    display: flex;
+    font-size: 2vh;
+    text-align: center;
+    max-width: 15vh;
+    min-width: 15vh;
+    justify-content: center;
+    color: white;
+    font-family: Montserrat;
+    text-decoration: none;
+    position: relative;
+    padding: 1.5vh 2vh;
+    background-color: #2C446B;
+    border-radius: 9px;
+    margin: 2vh;
+}
+
+.logout-link {
+    position: relative; 
+    margin-top: auto; 
+    background-color: transparent; 
+    pointer-events: auto;
+    margin-bottom: 6vh;
+}
+
+.profile-image {
+    display: flex;
+    max-width: 15vh;
+    max-height: 15vh;
+    border-radius: 50%;
+}
+
+.name {
+    margin-bottom: 4vh;
+    font-size: 2vh;
+    color: white;
+    font-family: Montserrat;
+}
+
+.closeButtonImage {
+    width: 2vh;
+    margin-top: 1vh;
+}
+
+.overlay {
+    width: 100%;
+    height: 100vh;
+    background: linear-gradient(0deg, #144784, #0F1E30);
+    /*opacity: 0;
+    transition: opacity 0.3s ease;*/
+    opacity: 0.65;
+    position: absolute;
+    z-index: 4;
+
+    transform: translateX(-100%);
+    transition: transform 0.5s ease;
+
+
+ }
+
+ .overlay.show {
+    pointer-events: auto;
+    display: block;
+
+    transform: translateX(0);
+
+    /*opacity: 0.65;*/
+  }
+
+  body, html {
+    padding: 0;
+    margin: 0;
+    height: 100vh;
+    background-color: transparent;
+    overflow: hidden;
+}
+
+.gradient-bg {
+    background: linear-gradient(0deg, #144784, #0f1e30);
+    position: fixed;
+    inset: 0;
+    z-index: -3;
+}
+
+
+
+
+
+
+ 
+
+ 
+.main-layout {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    height: 100vh;
+    flex-direction: column;
+}
+
+
 .back-arrow {
     background-color: transparent;
     border: none;
-    width: 4dvh;
+    width: 4vh;
     height: auto;
-    top: 3dvh;
-    left: 2.5dvh;
+    top: 3vh;
+    left: 2.5vh;
     position: absolute;
     z-index: 1;
     cursor: pointer;
@@ -97,8 +223,9 @@ body, html {
 
 .imageuploader {
     font-family: Montserrat;
-    width: 65dvh;
-    height: 45dvh;
+    width: 35vw;
+    margin-left: 2vh;
+    height: 45vh;
     border: 2px solid #323d72;
     border-radius: 10px;
     display: flex;
@@ -109,7 +236,7 @@ body, html {
     overflow: hidden;
     object-fit: cover;
     text-align: center;
-    font-size: 4dvh;
+    font-size: 4vh;
     color: rgba(255, 255, 255, 0.522);
     flex-direction: column;
 }
@@ -129,47 +256,49 @@ body, html {
 .imageandrows {
     display: flex;
     flex-direction: row;
-    padding-top: 1dvh;
-    padding-bottom: 2dvh;
+    padding-top: 1vh;
+    padding-bottom: 2vh;
     width: auto;
+    padding-right: 5vw;
+    padding-left: 5vw;
 
 }
 
 .row1 {
     display: flex;
-    flex-direction: row !important;
-    padding-bottom: 2dvh;
-    padding-left: 7dvh;
+    flex-direction: row;
+    padding-bottom: 2vh;
+    padding-left: 7vh;
 }
 
 .row2 {
     display: flex;
     flex-direction: row;
-    padding-bottom: 2dvh;
-    padding-left: 7dvh;
+    padding-bottom: 2vh;
+    padding-left: 7vh;
 }
 
 .row3 {
-    padding-left: 7dvh;
+    padding-left: 7vh;
     display: flex;
     flex-direction: row;
-    padding-bottom: 2dvh;
-    gap: 2dvh;
+    padding-bottom: 2vh;
+    gap: 2vh;
 }
 
 .row4 {
-    padding-left: 7dvh;
+    padding-left: 7vh;
     display: flex;
     flex-direction: row;
-    gap: 2dvh;
-    padding-bottom: 2dvh;
+    gap: 2vh;
+    padding-bottom: 2vh;
 }
 
 .row5 {
     display: flex;
-    flex-direction: row !important;
-    padding-bottom: 2dvh;
-    padding-left: 7dvh;
+    flex-direction: row;
+    padding-bottom: 2vh;
+    padding-left: 7vh;
 }
 
 .skillrow {
@@ -181,7 +310,7 @@ body, html {
 .rowslayout{
     display: flex;
     flex-direction: column;
-    padding-left: 3dvh;
+    padding-left: 3vh;
 }
 
 .input-group {
@@ -199,7 +328,7 @@ body, html {
 .field2 {
     display: flex;
     flex-direction: column;
-    padding-left: 4dvh;
+    padding-left: 4vh;
 }
 
 
@@ -207,7 +336,7 @@ label {
     margin-bottom: 0; 
     font-family: Montserrat;
     color: white;
-    font-size: 2dvh;
+    font-size: 2vh;
 }
 
 .labelPreferredName {
@@ -215,18 +344,17 @@ label {
 }
 
 .classDropdown {
-    padding-left: 6dvh;
-    padding-top: 0dvh;
+    padding-left: 6vh;
+    padding-top: 0vh;
     align-self: center;
     display: flex;
     flex-direction: column;
 }
 
 .classDropdown select {
-    width: 40dvh !important;
-    height: 3.6dvh;
+    width: 40vh !important;
+    height: 3.6vh;
     cursor: pointer;
-    padding: 0;
 }
 
 .buttonLayout {
@@ -236,7 +364,7 @@ label {
 }
 
 .personDropdown {
-    margin-left: 0dvh;
+    margin-left: 0vh;
     align-self: center;
     margin-bottom: 0;
     margin-top: auto;
@@ -244,32 +372,30 @@ label {
 }
 
 .personDropdown1 {
-    padding-left: 0dvh;
+    padding-left: 0vh;
     align-self: center;
-    padding-top: 0.5dvh;
+    padding-top: 0.5vh;
     display: flex;
     flex-direction: column;
     padding: 0;
 }
 
 .personDropdown select {
-    width: 27.2dvh !important;
-    height: 3.6dvh;
+    width: 27.2vh !important;
+    height: 3.6vh;
     cursor: pointer;
-    padding: 0;
 }
 
 .personDropdown1 select {
-    width: 27.2dvh !important;
-    height: 3.6dvh;
+    width: 27.2vh !important;
+    height: 3.6vh;
     cursor: pointer;
-    padding: 0;
 }
 
-.submitButton {
-    width: 12dvh;
-    height: 4dvh;
-    font-size: 1.5dvh;
+.saveButton {
+    width: 12vh;
+    height: 4vh;
+    font-size: 1.5vh;
     border: none;
     border-radius: 20px;
     cursor: pointer;
@@ -282,7 +408,7 @@ label {
 
 input[type=text], select {
     padding: 12px;
-    width: 37.5dvh;
+    width: 37.5vh;
     margin: 8px 0;
     border: none;
     border-radius: 4px;
@@ -301,8 +427,8 @@ input[type=text], select {
 
 
 .inputTechnicalSkills, .inputSoftSkills {
-    width: 80dvh !important;
-    height: 10dvh;
+    width: 42vw !important;
+    height: 10vh;
     resize: vertical;
     box-sizing: border-box;
     line-height: 1.5;
@@ -312,15 +438,14 @@ input[type=text], select {
     border: none;
     resize: none;
     border-radius: 5px;
-    font-family: Montserrat;
 }
 
 .centeringstuff {
     display: flex;
     flex-direction: column;
     width: 100%;
-    padding-bottom: 2dvh;
-    padding-top: 0dvh;
+    padding-bottom: 2vh;
+    padding-top: 0vh;
     align-items: center;
 }
 
@@ -336,7 +461,7 @@ input[type=text], select {
     right: 12px;
     color: rgba(255, 255, 255, 0.6);
     font-family: Montserrat;
-    font-size: 1.2dvh;
+    font-size: 1.2vh;
     pointer-events: none;
 }
 
@@ -347,4 +472,170 @@ input[type=text], select {
 
 .labelTechnicalSkills, .labelSoftSkills {
     margin: 8px 0;
+}
+
+
+
+@media (max-width: 1400px)  {
+.imageuploader {
+    width: 60vw;
+    margin: 0;
+}
+
+.imageWrapper{
+    padding-bottom: 4vh;
+}
+.imageWrapper,
+.rowslayout {
+  width: 100vw;
+  display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.buttonLayout {
+    padding-bottom: 2vh;
+}
+.imageandrows {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.centeringstuff {
+    padding: 0;
+}
+
+.input-group {
+    display: flex;
+    margin: 0;
+    gap: 0;
+}
+
+.skillrow .input-group {
+  flex-direction: column;
+}
+
+html, body {
+    overflow: scroll;
+}
+
+.skillrow {
+    display: flex;
+    flex-direction: column;
+    padding-bottom: 3vh;
+}
+
+.main-layout {
+    min-height: 100vw;
+    height: auto;
+    padding-top: 6vh;
+}
+.classDropdown {
+    padding-left: 2vh;
+    width: 40vh;
+    margin-right: 1vh;
+}
+.row2 {
+    gap: 2vh;
+}
+
+.classDropdown select {
+  width: 100% !important;
+  padding-left: 2vh;
+}
+
+.rowslayout {
+    gap: 2vh;
+}
+
+.inputSoftSkills, .inputTechnicalSkills {
+    width: clamp(420px, 100vw, 750px) !important;
+}
+
+.row1, .row2, .row3, .row4, .row5 {
+    padding-left: 0;
+}
+
+}
+
+
+
+@media (max-width: 850px)  { 
+.imageuploader {
+    width: clamp(280px, 80vw, 700px) !important;
+}
+.imageandrows {
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+.input-group {
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    gap: 0;
+}
+
+html, body {
+    overflow: scroll;
+}
+
+.rowslayout {
+    flex-direction: column;
+    padding-left: 0;
+    align-items: center;
+}
+
+.row1 {
+    flex-direction: column;
+    padding-left: 0;
+    align-self: center;
+}
+
+.row2 {
+    flex-direction: column;
+    padding-left: 0;
+}
+
+.row3 {
+    flex-direction: column;
+    padding-left: 0;
+}
+
+.row4 {
+    flex-direction: column;
+    padding-left: 0;
+}
+.row5 {
+    flex-direction: column;
+    padding-left: 0;
+}
+
+.skillrow {
+    display: flex;
+    flex-direction: column;
+}
+
+.classDropdown {
+    padding: 0;
+}
+
+.field2 {
+    padding-left: 0;
+}
+
+.main-layout {
+    min-height: 100vw;
+    height: auto;
+    padding-top: 6vh;
+}
+
+.inputSoftSkills, .inputTechnicalSkills {
+    width: 70vw !important;
+}
 }
