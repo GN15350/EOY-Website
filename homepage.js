@@ -1,7 +1,7 @@
 // Homepage/other pages
 const sidepanel = document.getElementById("side-panel");
 const overlay = document.getElementById("overlay");
-const wrapper = document.querySelector(".pageWrapper");
+const sections = Array.from(document.querySelectorAll(".section1, .section2"));
 const arrowLeft = document.querySelector(".arrow-left");
 const arrowRight = document.querySelector(".arrow-right");
 let activeSection = 0;
@@ -18,9 +18,9 @@ function closeMenu() {
 
 overlay?.addEventListener("click", closeMenu);
 
-function updateSectionNav() {
-  if (wrapper) {
-    wrapper.style.transform = activeSection === 0 ? "translateX(0)" : "translateX(-100vw)";
+function updateSectionNav(shouldScroll = false) {
+  if (shouldScroll && sections[activeSection]) {
+    sections[activeSection].scrollIntoView({ behavior: "smooth", inline: "start" });
   }
 
   if (arrowLeft) {
@@ -34,18 +34,28 @@ function updateSectionNav() {
 arrowLeft?.addEventListener("click", () => {
   if (activeSection > 0) {
     activeSection -= 1;
-    updateSectionNav();
+    updateSectionNav(true);
   }
 });
 
 arrowRight?.addEventListener("click", () => {
   if (activeSection < 1) {
     activeSection += 1;
-    updateSectionNav();
+    updateSectionNav(true);
   }
 });
 
-updateSectionNav();
+function syncSectionFromScroll() {
+  const idx = Math.round(window.scrollX / window.innerWidth);
+  if (!Number.isNaN(idx) && idx !== activeSection) {
+    activeSection = idx;
+    updateSectionNav(false);
+  }
+}
+
+window.addEventListener("scroll", syncSectionFromScroll, { passive: true });
+
+updateSectionNav(false);
 
 // Check auth
 if (!api.getTkn()) {
