@@ -1,7 +1,7 @@
 // Signup functionality
 const imgUpl = document.getElementById('imageUploader');
 const imgInp = document.getElementById('profilePic');
-const subBtn = document.getElementById('signupButton') || document.querySelector('.signupButton');
+const subBtn = document.getElementById('submitButton') || document.querySelector('.submitButton');
 let imgFile = null;
 
 imgUpl?.addEventListener('click', () => imgInp.click());
