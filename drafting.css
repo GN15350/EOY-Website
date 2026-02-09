@@ -235,3 +235,15 @@
     padding: 0;
     font-family: glacialIndifference;
 }
+
+
+
+
+
+@media (max-width: 850px)  { 
+    .grid {
+        padding-left: 3vh;
+        padding-right: 3vh;
+        left: 0;
+    }
+}
