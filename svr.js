@@ -1,14 +1,12 @@
 const exp = require('express');
 const pth = require('path');
 const fs = require('fs');
-const cors = require('cors');
 
 const app = exp();
 const prt = 3000;
 
 // CORS is handled by Cloudflare Transform Rules
 // In local dev we still need CORS to allow the frontend to hit the API.
-app.use(cors());
 
 app.use(exp.json());
 app.use('/uplds', exp.static('uplds'));
