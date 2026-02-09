@@ -231,3 +231,12 @@
  .teamLeader {
     cursor: text;
  }
+
+
+ @media (max-width: 850px)  {  
+    .grid {
+        left: 0;
+        padding-left: 3vh;
+        padding-right: 3vh;
+    }
+ }
