@@ -1,85 +1,40 @@
-var api = {
-  prodUrl: 'https://eoyapi.monty.my/api',
+const api = {
+  url: (() => {
+    const h = window.location.hostname;
+    console.log('Detected hostname:', h);
+    
+     if (h === 'localhost' || h === '127.0.0.1') {
+      console.log('Using local API');
+      return 'http://127.0.0.1:3000/api';
+    }
+
+    return [...new Set(candidates)];
+  },
+
   url: null,
 
-  getOverrideBase: function () {
-    var fromStorage = null;
-    try {
-      fromStorage = window.localStorage.getItem('apiBase');
-    } catch (e) {
-      fromStorage = null;
-    }
-
-    var fromQuery = null;
-    try {
-      if (window.URLSearchParams) {
-        fromQuery = new URLSearchParams(window.location.search).get('apiBase');
-      }
-    } catch (e) {
-      fromQuery = null;
-    }
-
-    var fromGlobal = typeof window.__API_BASE_URL === 'string' ? window.__API_BASE_URL : null;
-    return fromStorage || fromQuery || fromGlobal || null;
-  },
-
-  normalizeBase: function (base) {
-    if (!base || typeof base !== 'string') return null;
-    return base.replace(/\/$/, '');
-  },
-
-  uniqueList: function (arr) {
-    var out = [];
-    for (var i = 0; i < arr.length; i += 1) {
-      if (arr[i] && out.indexOf(arr[i]) === -1) out.push(arr[i]);
-    }
-    return out;
-  },
-
-  buildCandidates: function () {
-    var host = window.location.hostname;
-    var sameOrigin = window.location.origin + '/api';
-    var local = 'http://127.0.0.1:3000/api';
-    var override = this.normalizeBase(this.getOverrideBase());
-    var candidates = [];
-
-    if (override) candidates.push(override);
-
-    if (host === 'localhost' || host === '127.0.0.1') {
-      candidates.push(local);
-      candidates.push(sameOrigin);
-    } else {
-      // Cloudflared/public deployments should use same-origin first.
-      candidates.push(sameOrigin);
-      candidates.push(this.prodUrl);
-    }
-
-    return this.uniqueList(candidates);
-  },
-
-  getTkn: function () {
+  getTkn() {
     return localStorage.getItem('tkn');
   },
 
-  setTkn: function (t, uid) {
+  setTkn(t) {
     localStorage.setItem('tkn', t);
     localStorage.setItem('uid', uid || '');
   },
 
-  clr: function () {
+  clr() {
     localStorage.clear();
   },
 
-  req: async function (ep, opt) {
-    opt = opt || {};
-    var hdrs = { 'Content-Type': 'application/json' };
-    var tkn = this.getTkn();
-
-    if (!opt.noAuth && tkn) {
-      hdrs.Authorization = 'Bearer ' + tkn;
-    }
-
-    var cfg = {
+  async req(ep, opt = {}) {
+    const hdrs = { 'Content-Type': 'application/json' };
+    
+    const tkn = this.getTkn();
+      if (!opt.noAuth && tkn) {
+        hdrs.Authorization = `Bearer ${tkn}`;
+      }
+    
+    const cfg = {
       method: opt.m || 'GET',
       headers: hdrs
     };
@@ -88,14 +43,13 @@ var api = {
       cfg.body = JSON.stringify(opt.body);
     }
 
-    var candidates = this.buildCandidates();
-    var lastErr = null;
+    const candidates = this.buildCandidates();
+    let lastErr = null;
 
-    for (var i = 0; i < candidates.length; i += 1) {
-      var base = candidates[i];
+    for (const base of candidates) {
       try {
-        var res = await fetch(base + ep, cfg);
-        var dat = await res.json();
+        const res = await fetch(base + ep, cfg);
+        const dat = await res.json();
         this.url = base;
         return dat;
       } catch (err) {
