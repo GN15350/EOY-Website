@@ -19,7 +19,7 @@ const api = {
 
   setTkn(t) {
     localStorage.setItem('tkn', t);
-    localStorage.setItem('uid', arguments[1] || '');
+    localStorage.setItem('uid', uid || '');
   },
 
   clr() {
