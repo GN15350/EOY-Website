@@ -10,13 +10,14 @@ const sec = 'your_secret_key_12345';
 rtr.post('/register', async (req, res) => {
   try {
     const { fn, ln, pn, em, pw, ph, cl, ts, ss } = req.body;
+    const emNorm = String(em || '').trim().toLowerCase();
 
     // Validate required fields
-    if (!fn || !ln || !em || !pw || !cl) {
+    if (!fn || !ln || !emNorm || !pw || !cl) {
       return res.status(400).json({ ok: false, msg: 'Missing required fields' });
     }
 
-    const ex = await get('SELECT id FROM users WHERE em = ?', [em]);
+    const ex = await get('SELECT id FROM users WHERE lower(em) = lower(?)', [emNorm]);
     if (ex) {
       return res.status(400).json({ ok: false, msg: 'Email already registered. Please use a different email or try logging in.' });
     }
@@ -25,7 +26,7 @@ rtr.post('/register', async (req, res) => {
 
     const r = await run(
       'INSERT INTO users (fn, ln, pn, em, pw, ph, cl, ts, ss) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
-      [fn, ln, pn || null, em, hsh, ph || null, cl, ts || null, ss || null]
+      [fn, ln, pn || null, emNorm, hsh, ph || null, cl, ts || null, ss || null]
     );
 
     const tkn = jwt.sign({ uid: r.id }, sec, { expiresIn: '7d' });
@@ -42,8 +43,13 @@ rtr.post('/register', async (req, res) => {
 rtr.post('/login', async (req, res) => {
   try {
     const { em, pw } = req.body;
+    const emNorm = String(em || '').trim().toLowerCase();
 
-    const u = await get('SELECT * FROM users WHERE em = ?', [em]);
+    if (!emNorm || !pw) {
+      return res.status(400).json({ ok: false, msg: 'Missing credentials' });
+    }
+
+    const u = await get('SELECT * FROM users WHERE lower(em) = lower(?)', [emNorm]);
     if (!u) {
       return res.status(401).json({ ok: false, msg: 'Invalid credentials' });
     }

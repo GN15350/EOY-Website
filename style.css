@@ -22,6 +22,14 @@
     animation: arrowClick 0.35s ease-out;
   }
   
+
+.prev, .next {
+    padding: 0;
+}
+
+  .arrow {
+    width: 2vw;
+  }
   .appliedRise {
     opacity: 1;
     transform: translateY(0);
@@ -54,15 +62,14 @@
 body {
     background: #17304D;
     margin: 0;
-    padding: 0dvh;
+    padding: 0vh;
     scroll-behavior: smooth;
     height: 100%;
-    overflow: hidden;
 }
 
 html {
     margin: 0;
-    padding: 0dvh;
+    padding: 0vh;
     scroll-behavior: smooth;
     height: 100%;
 }
@@ -87,8 +94,9 @@ html {
     color: white;
     pointer-events: auto;
     font-weight: bold;
-    font-size: 5dvh;
+    font-size: 5vh;
     margin: 6px;
+    text-align: center;
 }
 
 .heading {
@@ -96,26 +104,35 @@ html {
     pointer-events: auto;
     font-family: robotDreamer;
     font-weight: bold;
-    font-size: 7dvh;
+    font-size: 7vh;
     margin: 6px;
+    text-align: center;
+}
+
+.hero-percy {
+    width: 40vh;
+    height: auto;
+    object-fit: contain;
+    margin-bottom: 0.8vh;
+    pointer-events: none;
 }
 
 .layout {
     width: 100%;
-    height: 100dvh;
+    height: 100vh;
     pointer-events: none;
     align-items: center;
     display: flex;
     align-self: center;
     flex-direction: column;
     justify-content: center;
-    top: 0dvh;
+    top: 0vh;
     z-index: 4;
 }
 .original-buttons {
     font-family: Montserrat;
-    width: 15dvh;
-    height: 4dvh;
+    width: 15vh;
+    height: 4vh;
     border-radius: 6px;
     background-color: #9BADFF;
     border: none;
@@ -128,60 +145,33 @@ html {
 .button-layout {
     display: flex;
     flex-direction: row;
-    padding: 2dvh;
+    align-items: center;
+    padding: 2vh;
     gap: 5em;
+}
+
+.percy-login {
+    width: 12vh;
+    height: auto;
+    object-fit: contain;
+    pointer-events: none;
 }
 
 .lines {
     z-index: -1;
     position: absolute;
     top: 0;
+    object-fit: cover;
     left: 0;
     width: 100%;
-    height: 100dvh;
+    height: 100vh;
 }
-
-.arrow-layout {
-    width: 100%;
-    pointer-events: none;
-    justify-content: center;
-    align-items: center;
-    display: flex;
-    z-index: 5;
-}
-
-
-.scroll-arrow {
-    pointer-events: auto;
-    cursor: pointer;
-    position: absolute;
-    z-index: 3;
-    bottom: 3dvh;
-    background-color: transparent;
-    color: white;
-    border: transparent;
-    font-size: 4dvh;
-    width: 6dvh;
-}
-
-.scroll-arrow-img {
-    height: auto;
-    width: 5dvh;
-}
-
-.section-1-everything {
-    padding: 0dvh;
-    margin: 0;
-}
-
-
 
 .section-1 .layout {
     transition: transform 3s ease, opacity 3s ease;
 }
   
 .section-1 .layout {
-    transform: translateY(-50px);
     opacity: 1;
 }
 
@@ -203,45 +193,119 @@ html {
     z-index: -2;
     background: linear-gradient(180deg, #17304D, #185CAD);
     width: 100%;
-    height: 100dvh;
+    height: 100vh;
 }
 
 
 .section-2 {
     width: 100%;
-    height: 100dvh;
+    height: 100vh;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     align-self: center;
-    padding: 0dvh;
+    padding: 0vh;
     margin: 0;
     position: relative;
 }
 
+.footer-space {
+    width: 100%;
+    box-sizing: border-box;
+    min-height: 20vh;
+    background: #17304D;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: center;
+    gap: 0.8rem;
+    padding: 2vh 3vw;
+}
+
+.footer-main {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2rem;
+}
+
+.footer-brand {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    min-width: 0;
+}
+
+.footer-logo {
+    height: 10vh;
+    width: auto;
+    object-fit: contain;
+}
+
+.footer-info {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    align-items: flex-end;
+    text-align: right;
+    max-width: 42vw;
+}
+
+.footer-title {
+    font-family: robotDreamer;
+    color: white;
+    font-size: 3vh;
+    letter-spacing: 0.02em;
+}
+
+.footer-link,
+.footer-text {
+    margin: 0;
+    font-family: Montserrat;
+    color: white;
+    font-size: 1.8vh;
+    text-decoration: none;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+}
+
+.footer-rights {
+    font-weight: 700;
+}
+
+.footer-link:hover {
+    text-decoration: underline;
+}
+
 .vertical-layout {
-    width: 50%;
-    padding-left: 10dvh;
+    width: 48%;
+    padding-left: 1.5vh;
 }
 
 .section-title {
     font-family: robotDreamer;
     color: white;
-    font-size: 5dvh;
+    font-size: 5vh;
 }
 
 .info {
     font-family: Montserrat;
-    width: 80%;
+    width: 95%;
     color: white;
-    font-size: 2dvh;
+    font-size: 2vh;
     font-weight: bold;
 }
 
 .horizontal-full-layout {
     display: flex;
     flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 2rem;
 }
 .image-carousel {
     display: flex;
@@ -252,8 +316,8 @@ html {
 }
   
 .carousel-image {
-    width: 80dvh;
-    height: 60dvh;
+    width: 80vh;
+    height: 60vh;
     object-fit: cover;
     border-radius: 10px;
     transition: opacity 0.5s ease;
@@ -266,19 +330,60 @@ html {
     cursor: pointer;
     color: white;
 }
-  
-.section-2 .scroll-top-arrow {
-    top: 2dvh;
-    font-size: 1.5dvh;
-    position: absolute;
-    background-color: transparent;
-    color: white;
-    border: transparent;
-    pointer-events: auto;
-    cursor: pointer;
+
+@media (max-width: 1400px)  {
+    .heading {
+        font-size: 7vh;
+    }
+
+    .heading-2 {
+        font-size: 5vh;
+    }
 }
 
-.scroll-top-arrow-img {
-    height: auto;
-    width: 3dvh;
+
+@media (max-width: 1300px)  { 
+    .heading {
+        font-size: 6vh;
+    }
+
+    .heading-2 {
+        font-size: 4vh;
+    }
+}
+
+@media (max-width: 1200px)  { 
+    .heading {
+        font-size: 5vh;
+    }
+
+    .heading-2 {
+        font-size: 3vh;
+    }
+}
+
+
+@media (max-width: 1000px)  { 
+    .heading {
+        font-size: 4vh;
+    }
+
+    .heading-2 {
+        font-size: 2vh;
+    }
+
+    .footer-space {
+        justify-content: flex-start;
+        gap: 1rem;
+    }
+
+    .footer-main {
+        flex-wrap: wrap;
+    }
+
+    .footer-info {
+        max-width: 100%;
+        align-items: flex-start;
+        text-align: left;
+    }
 }

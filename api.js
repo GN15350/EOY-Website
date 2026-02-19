@@ -1,4 +1,6 @@
 // API Configuration - Cloudflare Tunnel (prod) / local dev
+const TEAM_ADMIN_EMAIL = 'mcbrayers@friscoisd.org';
+
 const api = {
   url: (() => {
     try {
@@ -9,6 +11,22 @@ const api = {
     } catch (_) {}
     return 'https://eoyapi.monty.my/api';
   })(),
+
+  getAssetUrl(assetPath) {
+    if (!assetPath) return '';
+    if (/^https?:\/\//i.test(assetPath)) return assetPath;
+
+    try {
+      const u = new URL(this.url);
+      return `${u.origin}${assetPath}`;
+    } catch (_) {
+      return assetPath;
+    }
+  },
+
+  isTeamAdminUser(user) {
+    return !!user && typeof user.em === 'string' && user.em.toLowerCase() === TEAM_ADMIN_EMAIL;
+  },
   
   getTkn() {
     return localStorage.getItem('tkn');
@@ -40,26 +58,33 @@ const api = {
       cfg.body = JSON.stringify(opt.body);
     }
     
-    console.log('API Request:', cfg.method, this.url + ep);
-    console.log('Request config:', cfg);
-    
     try {
       const res = await fetch(this.url + ep, cfg);
-      console.log('Response status:', res.status, res.statusText);
-      
-      const dat = await res.json();
-      console.log('Response data:', dat);
-      
-      if (!dat.ok && res.status === 401) {
+      const txt = await res.text();
+      let dat = null;
+
+      try {
+        dat = txt ? JSON.parse(txt) : null;
+      } catch (_) {
+        dat = { ok: res.ok, msg: txt || res.statusText || 'Unexpected response' };
+      }
+
+      if (res.status === 401) {
         this.clr();
         window.location.href = 'login.html';
       }
-      
+
+      if (!dat || typeof dat !== 'object') {
+        return { ok: res.ok, msg: res.ok ? 'OK' : 'Request failed' };
+      }
+
+      if (typeof dat.ok !== 'boolean') {
+        dat.ok = res.ok;
+      }
+
       return dat;
     } catch (err) {
-      console.error('Fetch error:', err);
-      console.error('URL was:', this.url + ep);
-      throw err;
+      return { ok: false, msg: `Network error contacting ${this.url}${ep}: ${err.message}` };
     }
   }
 };

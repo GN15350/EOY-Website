@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="login.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <title>Login</title>
 </head>
 <body>
@@ -15,14 +16,17 @@
     <div class="main-layout">
         <div class="square">
             <div class="square-layout">
-                <p class="title">Log In</p>
+                <div class="login-title-row">
+                    <p class="title">Log In</p>
+                    <img src="elements/percy.png" alt="Percy" class="login-percy">
+                </div>
                 <form>
-                    <label class="labelUsername" for="idusername">Username</label>
-                    <input class-="inputUsername" type="text" id="idusername" name="username" placeholder="Username">
+                    <label class="labelUsername" for="idusername">Email</label>
+                    <input class="inputUsername" type="text" id="idusername" name="username" placeholder="Username">
 
                     <label class="labelPassword" for="idpassword">Password</label>
-                    <input class="inputPassowrd" type="text" id="idpassword" name="password" placeholder="Password">
-    
+                    <input class="inputPassword" type="password" id="idpassword" name="password" placeholder="Password">
+
                     <input type="submit" value="Log In">
                 </form>
             </div>

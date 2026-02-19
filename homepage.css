@@ -10,16 +10,11 @@
     margin: 0;
     background: linear-gradient(180deg, #150F34, #49318f);
     height: 100%;
-    overflow-x: auto;
-    overflow-y: hidden;
-    scroll-snap-type: x mandatory;
-    scroll-behavior: smooth;
+    overflow: hidden;
  }
 
  body {
-    display: flex;
-    flex-direction: row;
-    align-items: stretch;
+    position: relative;
  }
 
 @font-face {
@@ -49,7 +44,7 @@
     padding-left: 1vh;
     display: flex;
     flex-direction: row;
-    z-index: 6;
+    z-index: 9;
     height: 6vh;
     position: fixed;
     top: 0;
@@ -74,9 +69,18 @@
     border: none;
     cursor: pointer;
     font-family: Montserrat;
-    z-index: 2;
+    z-index: 9;
     padding-left: 1vh;
     padding-right: 1vh;
+    line-height: 0;
+}
+
+.open-menu-icon {
+    width: 6.2vh;
+    height: auto;
+    object-fit: contain;
+    display: block;
+    pointer-events: none;
 }
 
 .side-panel {
@@ -87,7 +91,7 @@
     width: 25vh;
     height: 100vh;
     background: linear-gradient(0deg, #251B54, #5E42AF);
-    z-index: 6;
+    z-index: 15;
 
     transform: translateX(-100%);
     transition: transform 0.3s ease;
@@ -139,13 +143,30 @@
     background-color: transparent; 
     pointer-events: auto;
     margin-bottom: 6vh;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.6vh;
+}
+
+.logout-link::before {
+    content: "";
+    width: 6vh;
+    height: 6vh;
+    background-image: url('elements/percy.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
 }
 
 .profile-image {
     display: flex;
+    width: 15vh;
+    height: 15vh;
     max-width: 15vh;
     max-height: 15vh;
     border-radius: 50%;
+    overflow: hidden;
+    object-fit: cover;
 }
 
 .name {
@@ -168,15 +189,15 @@
     transition: opacity 0.3s ease;*/
     opacity: 0.65;
     position: fixed;
-    z-index: 6;
+    z-index: 14;
 
     transform: translateX(-100%);
     transition: transform 0.5s ease;
 
 
- }
+}
 
- .overlay.show {
+.overlay.show {
     pointer-events: auto;
     display: block;
 
@@ -189,15 +210,18 @@
     padding-top: 10vh;
     z-index: 4;
     display: flex;
-    width: 100vw;
-    height: 100vh;
+    width: 100%;
+    height: 100%;
     align-items: center;
     justify-content: flex-start;
     flex-direction: column;
-    position: relative;
-    flex-shrink: 0;
-    scroll-snap-align: start;
+    position: fixed;
+    top: 0;
+    left: 0;
     overflow-y: auto;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.45s ease;
 }
 
 .title {
@@ -273,6 +297,9 @@
 .pfpHome {
     width: 10vh;
     margin-bottom: 2vh;
+    height: 10vh;
+    border-radius: 50%;
+    object-fit: cover;
 }
 
 .arrow-right {
@@ -298,21 +325,31 @@
 }
 
 .section2 {
-    position: relative;
+    padding-top: 10vh;
+    position: fixed;
+    top: 0;
+    left: 0;
     z-index: 4;
     display: flex;
-    width: 100vw;
-    height: 100vh;
+    width: 100%;
+    height: 100%;
     align-items: center;
     flex-direction: column;
-    flex-shrink: 0;
-    scroll-snap-align: start;
     overflow-y: auto;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.45s ease;
 }
 
 .arrow-disabled {
     opacity: 0.3;
     pointer-events: none;
+}
+
+.section1.is-active,
+.section2.is-active {
+    opacity: 1;
+    pointer-events: auto;
 }
 
 .title2 {
@@ -420,6 +457,52 @@
 
 .history-popup {
     display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: min(460px, calc(100vw - 40px));
+    max-height: 60vh;
+    overflow-y: auto;
+    background: #633C9B;
+    color: white;
+    border-radius: 18px;
+    border: none;
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.35);
+    padding: 16px;
+    z-index: 16;
+    font-family: 'Montserrat';
+    font-size: 1.8vh;
+}
+
+.history-overlay {
+    width: 100%;
+    height: 100vh;
+    background: linear-gradient(0deg, #251B54, #5E42AF);
+    opacity: 0;
+    position: fixed;
+    z-index: 10;
+    inset: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+.history-overlay.show {
+    opacity: 0.65;
+    pointer-events: auto;
+}
+
+.history-popup.show {
+    display: block;
+}
+
+.history-item {
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+.history-item:last-child {
+    border-bottom: none;
 }
 
 

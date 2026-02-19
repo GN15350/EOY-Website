@@ -11,7 +11,7 @@
     <div class="gradient-bg"></div>
     <div class="overlay" id="overlay"></div>
     <div class="header">
-        <button class="openMenuButton" onclick="openMenu()">&#9776;</button>
+        <button class="openMenuButton" onclick="openMenu()"><img src="elements/percy2.png" alt="Open menu" class="open-menu-icon"></button>
         <p class="title">EDIT YOUR PROFILE</p>
     </div>
 
@@ -45,7 +45,7 @@
                         <p>Click to upload</p>
                     </div>
                 </div>
-                <input type="file" id="profilePic" style="display:none" accept="image/*">
+                <input type="file" id="profilePic" class="hidden-file-input" accept="image/*">
 
                         
 
@@ -106,12 +106,12 @@
                                 <div class="input-group">
                                     <div class="field">
                                         <label class="labelPassword" for="idPassword">Password</label>
-                                        <input class="inputPassword" type="text" id="idPassword" name="Password" placeholder="password123">
+                                        <input class="inputPassword" type="password" id="idPassword" name="Password" placeholder="password123">
                                     </div>
                             
                                     <div class="field2">
                                         <label class="labelConfirm" for="idConfirm">Retype Password</label>
-                                        <input class="inputConfirm" type="text" id="idConfirm" name="Confirm" placeholder="password123">
+                                        <input class="inputConfirm" type="password" id="idConfirm" name="Confirm" placeholder="password123">
                                     </div>
                                 </div>
                             </form>

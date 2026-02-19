@@ -1,89 +1,179 @@
-// Edit Profile with auto-fill
-const sidepanel = document.getElementById("side-panel");
-const overlay = document.getElementById("overlay");
+const sidepanel = document.getElementById('side-panel');
+const overlay = document.getElementById('overlay');
+const imgUpl = document.getElementById('imageUploader');
+const imgInp = document.getElementById('profilePic');
+const reqSelects = Array.from(document.querySelectorAll('.row4 select'));
+
+let newImg = null;
+
+function addPasswordToggle(inp) {
+  if (!inp || inp.dataset.toggleReady) return;
+  inp.dataset.toggleReady = '1';
+
+  const wrap = document.createElement('div');
+  wrap.style.position = 'relative';
+  wrap.style.display = 'inline-block';
+  wrap.style.width = '40vh';
+  inp.parentNode.insertBefore(wrap, inp);
+  wrap.appendChild(inp);
+  inp.style.width = '100%';
+  inp.style.boxSizing = 'border-box';
+  inp.style.paddingRight = '38px';
+
+  const btn = document.createElement('button');
+  btn.type = 'button';
+  btn.innerHTML = '<i class="fa-regular fa-eye"></i>';
+  btn.setAttribute('aria-label', 'Show password');
+  btn.style.position = 'absolute';
+  btn.style.right = '8px';
+  btn.style.top = '50%';
+  btn.style.transform = 'translateY(-50%)';
+  btn.style.padding = '0';
+  btn.style.width = '24px';
+  btn.style.height = '24px';
+  btn.style.cursor = 'pointer';
+  btn.style.background = 'transparent';
+  btn.style.border = 'none';
+  btn.style.color = '#b8c2cc';
+  btn.addEventListener('click', () => {
+    const show = inp.type === 'password';
+    inp.type = show ? 'text' : 'password';
+    btn.innerHTML = show
+      ? '<i class="fa-regular fa-eye-slash"></i>'
+      : '<i class="fa-regular fa-eye"></i>';
+    btn.setAttribute('aria-label', show ? 'Hide password' : 'Show password');
+  });
+
+  wrap.appendChild(btn);
+}
+
+addPasswordToggle(document.getElementById('idPassword'));
+addPasswordToggle(document.getElementById('idConfirm'));
 
 function openMenu() {
-  sidepanel.classList.add("open");
-  overlay.classList.add("show");
+  sidepanel?.classList.add('open');
+  overlay?.classList.add('show');
 }
 
 function closeMenu() {
-  sidepanel.classList.remove("open");
-  overlay.classList.remove("show");
+  sidepanel?.classList.remove('open');
+  overlay?.classList.remove('show');
 }
 
-overlay.addEventListener("click", closeMenu);
+overlay?.addEventListener('click', closeMenu);
 
-const imgUpl = document.getElementById('imageUploader');
-const imgInp = document.getElementById('profilePic');
-let newImg = null;
-
-imgUpl?.addEventListener('click', () => imgInp.click());
+imgUpl?.addEventListener('click', () => imgInp?.click());
 
 imgInp?.addEventListener('change', (e) => {
-  const f = e.target.files[0];
-  if (f) {
-    newImg = f;
-    const rdr = new FileReader();
-    rdr.onload = (ev) => {
-      imgUpl.innerHTML = `<img src="${ev.target.result}" alt="Profile">`;
-    };
-    rdr.readAsDataURL(f);
-  }
+  const f = e.target.files?.[0];
+  if (!f) return;
+
+  newImg = f;
+  const rdr = new FileReader();
+  rdr.onload = (ev) => {
+    imgUpl.innerHTML = `<img src="${ev.target.result}" alt="Profile">`;
+  };
+  rdr.readAsDataURL(f);
 });
 
-// Char counters
-['idTechnicalSkills', 'idSoftSkills'].forEach(id => {
+['idTechnicalSkills', 'idSoftSkills'].forEach((id) => {
   const el = document.getElementById(id);
   const cnt = document.getElementById(id === 'idTechnicalSkills' ? 'techCharCount' : 'softCharCount');
   el?.addEventListener('input', () => {
-    cnt.textContent = `${el.value.length} / 200`;
+    if (cnt) cnt.textContent = `${el.value.length} / 200`;
   });
 });
 
-// Check auth
-if (!api.getTkn()) {
-  window.location.href = 'login.html';
-} else {
-  loadData();
+function userName(u) {
+  return `${u.pn || u.fn} ${u.ln}`;
+}
+
+function setSidebarUser(u) {
+  const nm = document.querySelector('.side-panel .name');
+  if (nm) nm.textContent = userName(u);
+  const img = document.querySelector('.side-panel .profile-image');
+  if (img) img.src = u.pp ? api.getAssetUrl(u.pp) : 'elements/pfpimage.png';
+}
+
+function getSelectedReqIds() {
+  const ids = reqSelects
+    .map((s) => Number(s.value))
+    .filter((v) => Number.isInteger(v) && v > 0);
+  return [...new Set(ids)].slice(0, 3);
+}
+
+function populateRequestedDropdowns(users, selectedIds = []) {
+  if (!reqSelects.length) return;
+
+  reqSelects.forEach((sel) => {
+    sel.innerHTML = '<option value="">--Select a person--</option>';
+    users.forEach((u) => {
+      const opt = document.createElement('option');
+      opt.value = String(u.id);
+      opt.textContent = `${userName(u)} (${u.cl || ''})`;
+      sel.appendChild(opt);
+    });
+  });
+
+  reqSelects.forEach((sel, idx) => {
+    if (selectedIds[idx]) sel.value = String(selectedIds[idx]);
+  });
+}
+
+function enforceAdminNavOnly(user) {
+  if (!api.isTeamAdminUser(user)) return;
+  document.querySelectorAll('.side-panel .links').forEach((link) => {
+    const href = link.getAttribute('href');
+    const allowed = href === 'allTeams.html' || href === 'editProfile.html';
+    if (!allowed && !link.classList.contains('logout-link')) {
+      link.style.display = 'none';
+    }
+  });
 }
 
 async function loadData() {
   try {
     const res = await api.req('/usr/profile');
-    
-    if (res.ok) {
-      const u = res.data;
-      
-      // Auto-fill form
-      document.getElementById('idFirstName').value = u.fn || '';
-      document.getElementById('idLastName').value = u.ln || '';
-      document.getElementById('idPreferredName').value = u.pn || '';
-      document.getElementById('idEmail').value = u.em || '';
-      document.getElementById('idNumber').value = u.ph || '';
-      document.getElementById('classDropdown').value = u.cl || '';
-      document.getElementById('idTechnicalSkills').value = u.ts || '';
-      document.getElementById('idSoftSkills').value = u.ss || '';
+    if (!res.ok) return null;
+    const u = res.data;
 
-      // Update char counts
-      document.getElementById('techCharCount').textContent = `${(u.ts || '').length} / 200`;
-      document.getElementById('softCharCount').textContent = `${(u.ss || '').length} / 200`;
+    document.getElementById('idFirstName').value = u.fn || '';
+    document.getElementById('idLastName').value = u.ln || '';
+    document.getElementById('idPreferredName').value = u.pn || '';
+    document.getElementById('idEmail').value = u.em || '';
+    document.getElementById('idNumber').value = u.ph || '';
+    document.getElementById('classDropdown').value = u.cl || '';
+    document.getElementById('idTechnicalSkills').value = u.ts || '';
+    document.getElementById('idSoftSkills').value = u.ss || '';
 
-      // Show profile pic
-      if (u.pp) {
-        imgUpl.innerHTML = `<img src="https://eoyapi.monty.my${u.pp}" alt="Profile">`;
-      }
+    document.getElementById('techCharCount').textContent = `${(u.ts || '').length} / 200`;
+    document.getElementById('softCharCount').textContent = `${(u.ss || '').length} / 200`;
 
-      // Update sidebar
-      const nm = document.querySelector('.side-panel .name');
-      if (nm) nm.textContent = `${u.pn || u.fn} ${u.ln}`;
+    if (u.pp && imgUpl) {
+      imgUpl.innerHTML = `<img src="${api.getAssetUrl(u.pp)}" alt="Profile">`;
     }
+
+    setSidebarUser(u);
+    enforceAdminNavOnly(u);
+
+    const [allRes, reqRes] = await Promise.all([
+      api.req('/usr/all'),
+      api.req('/usr/profile/requests')
+    ]);
+    if (allRes.ok && Array.isArray(allRes.data)) {
+      const selectedIds = reqRes.ok && Array.isArray(reqRes.data)
+        ? reqRes.data.map((m) => m.id).slice(0, 3)
+        : [];
+      populateRequestedDropdowns(allRes.data, selectedIds);
+    }
+
+    return u;
   } catch (e) {
     console.error(e);
+    return null;
   }
 }
 
-// Save button
 const saveBtn = document.querySelector('.saveButton');
 saveBtn?.addEventListener('click', async () => {
   const fn = document.getElementById('idFirstName').value.trim();
@@ -106,11 +196,14 @@ saveBtn?.addEventListener('click', async () => {
     if (newImg) {
       const fd = new FormData();
       fd.append('pic', newImg);
-      await fetch('https://eoyapi.monty.my/api/usr/profile/pic', {
+      const uplRes = await fetch(`${api.url}/usr/profile/pic`, {
         method: 'POST',
         headers: { Authorization: `Bearer ${api.getTkn()}` },
         body: fd
       });
+      if (!uplRes.ok) {
+        alert('Failed to upload profile image');
+      }
     }
 
     const res = await api.req('/usr/profile', {
@@ -119,23 +212,24 @@ saveBtn?.addEventListener('click', async () => {
     });
 
     if (res.ok) {
+      await api.req('/usr/profile/requests', {
+        m: 'PUT',
+        body: { memberIds: getSelectedReqIds() }
+      });
       alert('Profile updated!');
       await loadData();
     } else {
       alert(res.msg || 'Update failed');
     }
-
-    saveBtn.disabled = false;
-    saveBtn.textContent = 'Save';
   } catch (e) {
     console.error(e);
     alert('Error updating');
+  } finally {
     saveBtn.disabled = false;
     saveBtn.textContent = 'Save';
   }
 });
 
-// Logout
 document.querySelector('.logout-link')?.addEventListener('click', (e) => {
   e.preventDefault();
   if (confirm('Logout?')) {
@@ -143,3 +237,9 @@ document.querySelector('.logout-link')?.addEventListener('click', (e) => {
     window.location.href = 'login.html';
   }
 });
+
+if (!api.getTkn()) {
+  window.location.href = 'login.html';
+} else {
+  loadData();
+}

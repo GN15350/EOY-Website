@@ -56,6 +56,15 @@
     z-index: 2;
     padding-left: 1dvh;
     padding-right: 1dvh;
+    line-height: 0;
+}
+
+.open-menu-icon {
+    width: 6.2dvh;
+    height: auto;
+    object-fit: contain;
+    display: block;
+    pointer-events: none;
 }
 
 .title {
@@ -128,13 +137,29 @@
     background-color: transparent; 
     pointer-events: auto;
     margin-bottom: 6dvh;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.6dvh;
+}
+
+.logout-link::before {
+    content: "";
+    width: 6dvh;
+    height: 6dvh;
+    background-image: url('elements/percy.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
 }
 
 .profile-image {
     display: flex;
+    width: 15dvh;
+    height: 15dvh;
     max-width: 15dvh;
     max-height: 15dvh;
     border-radius: 50%;
+    object-fit: cover;
 }
 
 .name {

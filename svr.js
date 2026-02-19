@@ -19,9 +19,11 @@ if (!fs.existsSync('./uplds')) {
 
 const { rtr: authRtr } = require('./rts/auth');
 const usrRtr = require('./rts/usr');
+const teamRtr = require('./rts/team');
 
 app.use('/api/auth', authRtr);
 app.use('/api/usr', usrRtr);
+app.use('/api/team', teamRtr);
 app.get('/api/health', (req, res) => {
   res.json({ ok: true });
 });
@@ -37,4 +39,12 @@ app.listen(prt, '0.0.0.0', () => {
   console.log('  GET  /api/usr/all');
   console.log('  GET  /api/usr/:id');
   console.log('  POST /api/usr/request (CS1 only)\n');
+  console.log('  GET  /api/team/my');
+  console.log('  GET  /api/team/all');
+  console.log('  GET  /api/team/by-user/:uid');
+  console.log('  GET  /api/team/:id');
+  console.log('  POST /api/team');
+  console.log('  PUT  /api/team/:id/meta\n');
+  console.log('  DELETE /api/team/:id (admin only)');
+  console.log('  DELETE /api/team/:tid/member/:uid (admin only)\n');
 });

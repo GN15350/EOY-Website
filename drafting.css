@@ -37,6 +37,16 @@
     pointer-events: none;
 }
 
+.header {
+    width: 100%;
+    padding-top: 1vh;
+    padding-left: 1vh;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    z-index: 2;
+}
+
 .openMenuButton {
     background-color: transparent;
     color: white;
@@ -44,22 +54,26 @@
     border: none;
     cursor: pointer;
     font-family: Montserrat;
-    position: absolute;
-    top: 1vh;
-    left: 1vh;
     z-index: 2;
+    line-height: 0;
+}
+
+.open-menu-icon {
+    width: 6.2vh;
+    height: auto;
+    object-fit: contain;
+    display: block;
+    pointer-events: none;
 }
 
 .title {
     font-family: robotDreamer;
     font-size: 3.8vh;
     color: white;
-    left: 5vh;
     display: flex;
-    position: relative;
-    top: 2vh;
-    padding-left: 1.5vh;
+    padding-left: 0.6vh;
     margin: 0;
+    z-index: 2;
 }
 
 .side-panel {
@@ -122,13 +136,29 @@
     background-color: transparent; 
     pointer-events: auto;
     margin-bottom: 6vh;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.6vh;
+}
+
+.logout-link::before {
+    content: "";
+    width: 6vh;
+    height: 6vh;
+    background-image: url('elements/percy.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
 }
 
 .profile-image {
     display: flex;
+    width: 15vh;
+    height: 15vh;
     max-width: 15vh;
     max-height: 15vh;
     border-radius: 50%;
+    object-fit: cover;
 }
 
 .name {
@@ -218,8 +248,9 @@
 
  .profileImage {
     width: 10vh;
-    height: auto;
+    height: 10vh;
     border-radius: 50%;
+    object-fit: cover;
 }
 
  .name {

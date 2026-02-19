@@ -47,6 +47,15 @@
     z-index: 2;
     padding-left: 1vh;
     padding-right: 1vh;
+    line-height: 0;
+}
+
+.open-menu-icon {
+    width: 6.2vh;
+    height: auto;
+    object-fit: contain;
+    display: block;
+    pointer-events: none;
 }
 
 .title {
@@ -119,13 +128,29 @@
     background-color: transparent; 
     pointer-events: auto;
     margin-bottom: 6vh;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.6vh;
+}
+
+.logout-link::before {
+    content: "";
+    width: 6vh;
+    height: 6vh;
+    background-image: url('elements/percy.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
 }
 
 .profile-image {
     display: flex;
+    width: 15vh;
+    height: 15vh;
     max-width: 15vh;
     max-height: 15vh;
     border-radius: 50%;
+    object-fit: cover;
 }
 
 .name {
@@ -138,6 +163,10 @@
 .closeButtonImage {
     width: 2vh;
     margin-top: 1vh;
+}
+
+.hidden-file-input {
+    display: none;
 }
 
 .overlay {
@@ -404,9 +433,29 @@ label {
 }
 
 
-input[type=text], select {
+input[type=text] {
     padding: 12px;
-    width: 37.5vh;
+    width: 40vh;
+    margin: 8px 0;
+    border: none;
+    border-radius: 4px;
+    background-color: #334E79;
+    color: white;
+}
+
+input[type=password] {
+    padding: 12px;
+    width: 40vh !important;
+    margin: 8px 0;
+    border: none;
+    border-radius: 4px;
+    background-color: #334E79;
+    color: white;
+}
+
+select {
+    padding: 0;
+    width: 40vh;
     margin: 8px 0;
     border: none;
     border-radius: 4px;

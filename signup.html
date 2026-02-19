@@ -24,11 +24,11 @@
 
                     <div class="imageWrapper">
                         <div class="imageuploader" id="imageUploader">
-                            <i class="fa-solid fa-camera fa-2x"></i>
+                            <img src="elements/percy.png" alt="Percy" class="signup-percy-placeholder">
                             <p>Click to upload</p>
                         </div>
                     </div>
-                    <input type="file" id="profilePic" style="display:none" accept="image/*">
+                    <input type="file" id="profilePic" class="hidden-file-input" accept="image/*">
 
                             
 
@@ -89,12 +89,12 @@
                                     <div class="input-group">
                                         <div class="field">
                                             <label class="labelPassword" for="idPassword">Password</label>
-                                            <input class="inputPassword" type="text" id="idPassword" name="Password" placeholder="password123">
+                                            <input class="inputPassword" type="password" id="idPassword" name="Password" placeholder="password123">
                                         </div>
                                 
                                         <div class="field2">
                                             <label class="labelConfirm" for="idConfirm">Retype Password</label>
-                                            <input class="inputConfirm" type="text" id="idConfirm" name="Confirm" placeholder="password123">
+                                            <input class="inputConfirm" type="password" id="idConfirm" name="Confirm" placeholder="password123">
                                         </div>
                                     </div>
                                 </form>
@@ -160,8 +160,7 @@
             </div>
 
             <div class="buttonLayout">
-                <button id="submitButton" class="closeButton">Submit</button>
-
+                <button type="button" id="signupButton" class="closeButton signupButton">Submit</button>
             </div>
     </div>
 

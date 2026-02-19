@@ -7,30 +7,21 @@
     <title>EOY Website</title>
 </head>
 <body>
-    <section class="section-1-everything">
-        <div class="section-1">
-            <div class="layout">
-                <p class="heading-2 rise rise-1">FRISCO HIGH SCHOOL COMPUTER SCIENCE’S</p>
-                <p class="heading rise rise-2">END OF THE YEAR PRESENTATIONS</p>
-                <div class="button-layout rise rise-3">
-                    <button onclick="window.location.href='signup.html'" class="original-buttons">Sign-up</button>
-                    <button onclick="window.location.href='login.html'" class="original-buttons">Log in</button>
-                </div>
+    <div class="section-1">
+        <div class="layout">
+            <img src="elements/percy.png" alt="Percy" class="hero-percy">
+            <p class="heading-2 rise rise-1">FRISCO HIGH SCHOOL COMPUTER SCIENCE’S</p>
+            <p class="heading rise rise-2">END OF THE YEAR PRESENTATIONS</p>
+            <div class="button-layout rise rise-3">
+                <button onclick="window.location.href='signup.html'" class="original-buttons">Sign-up</button>
+                <button onclick="window.location.href='login.html'" class="original-buttons">Log in</button>
             </div>
-            <div class="arrow-layout">
-                <button class="scroll-arrow">
-                    <img class="scroll-arrow-img" src="elements/down-arrow.png" alt="down-arrow">
-                </button>
-            </div>
-            <img class="lines" src="elements/lines.png" alt="lines">
         </div>
-        <div class="gradient-bg"></div>
-    </section>
+        <img class="lines" src="elements/lines.png" alt="lines">
+    </div>
+    <div class="gradient-bg"></div>
 
     <section class="section-2">
-        <button class="scroll-top-arrow">
-            <img class="scroll-top-arrow-img" src="elements/up-arrow.png" alt="down-arrow">
-        </button>
         <div class="horizontal-full-layout"> 
             <div class="vertical-layout"> 
                 <div class="about-section">
@@ -47,16 +38,29 @@
                 </div>
             </div>
             <div class="image-carousel">
-                <button class="prev">&lt;</button>
-                <img src="cs images/cs-image-1.png" alt="photo" class="carousel-image">
-                <button class="next">&gt;</button>
-            </div>              
+                <button class="prev"><img class="arrow" src="elements/arrow-l.png" alt="arrow"></button>
+                <img src="cs images/csimage1.png" alt="photo" class="carousel-image">
+                <button class="next"><img class="arrow" src="elements/arrow-r.png" alt="arrow"></button>
+            </div>
         </div>
         <div class="gradient-bg-2"></div>
     </section>
+    <div class="footer-space">
+        <div class="footer-main">
+            <div class="footer-brand">
+                <img src="footer/logo2.png" alt="Footer logo" class="footer-logo">
+                <span class="footer-title">FRISCO CS<br>25-26</span>
+            </div>
+            <div class="footer-info">
+                <a class="footer-link" href="https://www.instagram.com/friscocompsci/" target="_blank" rel="noopener noreferrer">Instagram: @friscocompsci</a>
+                <a class="footer-link" href="mailto:mcbrayers@friscoisd.org">Email: mcbrayers@friscoisd.org</a>
+                <p class="footer-text footer-rights">No rights reserved.</p>
+            </div>
+        </div>
+    </div>
 
 
-    <script src="api.js?v=1"></script>
+    <script src="api.js?v=3"></script>
     <script src="script.js"></script>
 </body>
 </html>

@@ -3,6 +3,49 @@ const frm = document.querySelector('form');
 const emInp = document.getElementById('idusername');
 const pwInp = document.getElementById('idpassword');
 
+function addPasswordToggle(inp) {
+  if (!inp || inp.dataset.toggleReady) return;
+  inp.dataset.toggleReady = '1';
+
+  const wrap = document.createElement('div');
+  wrap.style.position = 'relative';
+  wrap.style.display = 'block';
+  wrap.style.width = '50%';
+  inp.parentNode.insertBefore(wrap, inp);
+  wrap.appendChild(inp);
+  inp.style.width = '100%';
+  inp.style.boxSizing = 'border-box';
+  inp.style.paddingRight = '38px';
+
+  const btn = document.createElement('button');
+  btn.type = 'button';
+  btn.innerHTML = '<i class="fa-regular fa-eye"></i>';
+  btn.setAttribute('aria-label', 'Show password');
+  btn.style.position = 'absolute';
+  btn.style.right = '8px';
+  btn.style.top = '50%';
+  btn.style.transform = 'translateY(-50%)';
+  btn.style.padding = '0';
+  btn.style.width = '24px';
+  btn.style.height = '24px';
+  btn.style.cursor = 'pointer';
+  btn.style.background = 'transparent';
+  btn.style.border = 'none';
+  btn.style.color = '#b8c2cc';
+  btn.addEventListener('click', () => {
+    const show = inp.type === 'password';
+    inp.type = show ? 'text' : 'password';
+    btn.innerHTML = show
+      ? '<i class="fa-regular fa-eye-slash"></i>'
+      : '<i class="fa-regular fa-eye"></i>';
+    btn.setAttribute('aria-label', show ? 'Hide password' : 'Show password');
+  });
+
+  wrap.appendChild(btn);
+}
+
+addPasswordToggle(pwInp);
+
 console.log('Login page loaded');
 console.log('Form found:', !!frm);
 console.log('Email input found:', !!emInp);
@@ -47,6 +90,13 @@ frm?.addEventListener('submit', async (e) => {
     if (res && res.ok) {
       console.log('Login successful! Token:', res.tkn?.substring(0, 20) + '...');
       api.setTkn(res.tkn, res.uid);
+      const meRes = await api.req('/usr/profile');
+      if (meRes.ok && api.isTeamAdminUser(meRes.data)) {
+        localStorage.removeItem('viewTid');
+        localStorage.removeItem('viewUid');
+        window.location.href = 'allTeams.html';
+        return;
+      }
       console.log('Redirecting to homepage...');
       window.location.href = 'homepage.html';
     } else {

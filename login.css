@@ -74,7 +74,7 @@ label {
     font-size: 4dvh;
 }
 
-input[type=text], select {
+input[type=text], input[type=password], select {
   width: 50%;
   padding: 12px;
   margin: 8px 0;
@@ -94,6 +94,7 @@ textarea::placeholder {
 }
 
 input[type="text"]:focus,
+input[type="password"]:focus,
 select:focus {
     color: white;
     font-family: glacialIndifference;
@@ -114,18 +115,35 @@ input[type=submit] {
     margin: 3dvh;
 }
 
+.login-percy {
+    width: 7dvh;
+    height: auto;
+    object-fit: contain;
+    pointer-events: none;
+}
+
 input[type=submit]:hover {
   background-color: #6e5faa;
 }
 
 .title {
     margin-top: 0;
-    width: 110dvh;
-    text-align: center;
+    margin-bottom: 0;
+    width: auto;
+    text-align: left;
     font-size: 5dvh;
     font-family: Montserrat;
     color: white;
     font-weight: bolder;
+}
+
+.login-title-row {
+    width: 110dvh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1.4dvh;
+    margin-bottom: 2dvh;
 }
 
 .lines {
@@ -163,7 +181,7 @@ input[type=submit]:hover {
     .square {
         width: 90vw;
     }
-    .title {
+    .login-title-row {
         width: 90vw;
     }
 }

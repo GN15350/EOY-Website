@@ -51,6 +51,15 @@
     top: 1dvh;
     left: 1dvh;
     z-index: 2;
+    line-height: 0;
+}
+
+.open-menu-icon {
+    width: 6.2dvh;
+    height: auto;
+    object-fit: contain;
+    display: block;
+    pointer-events: none;
 }
 
 .side-panel {
@@ -113,13 +122,29 @@
     background-color: transparent; 
     pointer-events: auto;
     margin-bottom: 6dvh;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.6dvh;
+}
+
+.logout-link::before {
+    content: "";
+    width: 6dvh;
+    height: 6dvh;
+    background-image: url('elements/percy.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
 }
 
 .profile-image {
     display: flex;
+    width: 15dvh;
+    height: 15dvh;
     max-width: 15dvh;
     max-height: 15dvh;
     border-radius: 50%;
+    object-fit: cover;
 }
 
 .name {
@@ -228,8 +253,9 @@
 
  .leaderProfile {
     width: 25dvh;
-    height: auto;
+    height: 25dvh;
     border-radius: 50%;
+    object-fit: cover;
  }
 
  .leaderName {
@@ -275,9 +301,11 @@
  }
 
  .memberProfile {
+    width: 13dvh;
+    height: 13dvh;
     max-width: 13dvh;
-    height: auto;
     border-radius: 50%;
+    object-fit: cover;
     padding: 0;
     margin: 0;
  }
