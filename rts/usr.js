@@ -5,6 +5,7 @@ const { vrf } = require('./auth');
 const mult = require('multer');
 const pth = require('path');
 const nodemailer = require('nodemailer');
+const crypto = require('crypto');
 const TEAM_ADMIN_EMAIL = 'mcbrayers@friscoisd.org';
 let mailer = null;
 
@@ -41,6 +42,31 @@ const ensureRequestedTbl = async () => {
     )
   `);
 };
+
+const ensureTeamInviteTbl = async () => {
+  await run(`
+    CREATE TABLE IF NOT EXISTS team_invites (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      requester_id INTEGER NOT NULL,
+      recipient_id INTEGER NOT NULL,
+      token TEXT NOT NULL UNIQUE,
+      status TEXT NOT NULL DEFAULT 'pending',
+      expires_at DATETIME NOT NULL,
+      ca DATETIME DEFAULT CURRENT_TIMESTAMP,
+      responded_at DATETIME,
+      FOREIGN KEY (requester_id) REFERENCES users(id) ON DELETE CASCADE,
+      FOREIGN KEY (recipient_id) REFERENCES users(id) ON DELETE CASCADE
+    )
+  `);
+};
+
+function makeInviteToken() {
+  return crypto.randomBytes(32).toString('hex');
+}
+
+function frontendBaseUrl(req) {
+  return process.env.FRONTEND_BASE_URL || `${req.protocol}://${req.get('host')}`;
+}
 
 const upl = mult({
   storage: mult.diskStorage({
@@ -224,6 +250,8 @@ rtr.get('/:id', vrf, async (req, res) => {
 // Send member request (CS1 only)
 rtr.post('/request', vrf, async (req, res) => {
   try {
+    await ensureTeamInviteTbl();
+
     // Check if requester is CS1
     const req_usr = await get('SELECT cl FROM users WHERE id = ?', [req.uid]);
     if (!req_usr || req_usr.cl !== 'CS1') {
@@ -235,16 +263,71 @@ rtr.post('/request', vrf, async (req, res) => {
       return res.status(400).json({ ok: false, msg: 'Recipient is required' });
     }
 
+    if (Number(toId) === Number(req.uid)) {
+      return res.status(400).json({ ok: false, msg: 'You cannot request yourself' });
+    }
+
+    const reqTeam = await get(
+      `SELECT tid
+       FROM members
+       WHERE uid = ?
+       ORDER BY ja DESC
+       LIMIT 1`,
+      [req.uid]
+    );
+    if (!reqTeam) {
+      return res.status(400).json({
+        ok: false,
+        msg: 'Create your team first. Invitations can only be sent for an existing team.'
+      });
+    }
+
     // Get requester info
     const frm = await get('SELECT fn, ln, pn, em FROM users WHERE id = ?', [req.uid]);
-    const target = await get('SELECT id, fn, ln, pn, em FROM users WHERE id = ?', [toId]);
+    const target = await get('SELECT id, fn, ln, pn, em, cl FROM users WHERE id = ?', [toId]);
     if (!target) {
       return res.status(404).json({ ok: false, msg: 'Recipient not found' });
     }
+    if (target.cl !== 'CS1') {
+      return res.status(400).json({ ok: false, msg: 'Only CS1 students can be requested' });
+    }
+
+    const targetTeam = await get(
+      `SELECT tid
+       FROM members
+       WHERE uid = ?
+       ORDER BY ja DESC
+       LIMIT 1`,
+      [toId]
+    );
+    if (targetTeam) {
+      return res.status(400).json({ ok: false, msg: 'That student is already on a team' });
+    }
+
+    const existingInvite = await get(
+      `SELECT id
+       FROM team_invites
+       WHERE requester_id = ?
+       AND recipient_id = ?
+       AND status = 'pending'
+       AND datetime(expires_at) > datetime('now')`,
+      [req.uid, toId]
+    );
+    if (existingInvite) {
+      return res.status(400).json({ ok: false, msg: 'A pending invitation already exists for this student' });
+    }
+
+    const token = makeInviteToken();
+    await run(
+      `INSERT INTO team_invites (requester_id, recipient_id, token, status, expires_at)
+       VALUES (?, ?, ?, 'pending', datetime('now', '+7 days'))`,
+      [req.uid, toId, token]
+    );
 
     const frmNm = `${frm.pn || frm.fn} ${frm.ln}`;
     const toNm = `${target.pn || target.fn} ${target.ln}`;
     const toEm = target.em;
+    const inviteUrl = `${frontendBaseUrl(req).replace(/\/$/, '')}/requestConfirm.html?token=${encodeURIComponent(token)}`;
     const smtp = getMailer();
     if (!smtp) {
       return res.status(503).json({
@@ -255,12 +338,16 @@ rtr.post('/request', vrf, async (req, res) => {
 
     const from = process.env.SMTP_FROM || process.env.SMTP_USER;
     const subject = `Team Member Request from ${frmNm}`;
-    const text = `${frmNm} (${frm.em}) wants to work with you on their CS project team.`;
+    const text = `${frmNm} (${frm.em}) wants to work with you on their CS project team. Open this link to accept or decline: ${inviteUrl}`;
     const html = `
       <div style="font-family: Arial, sans-serif; line-height: 1.5;">
         <p>Hi ${toNm},</p>
         <p><strong>${frmNm}</strong> (${frm.em}) wants to work with you on their CS project team.</p>
-        <p>Please reply to this email to accept or decline.</p>
+        <p>
+          Open this link to accept or decline the invitation:<br />
+          <a href="${inviteUrl}">${inviteUrl}</a>
+        </p>
+        <p>This invitation expires in 7 days.</p>
       </div>
     `;
 
@@ -283,6 +370,116 @@ rtr.post('/request', vrf, async (req, res) => {
       });
     }
     res.status(500).json({ ok: false, msg: 'Error sending request email' });
+  }
+});
+
+rtr.get('/request/invite/:token', async (req, res) => {
+  try {
+    await ensureTeamInviteTbl();
+    const inv = await get(
+      `SELECT
+        ti.id,
+        ti.requester_id,
+        ti.recipient_id,
+        ti.status,
+        ti.expires_at,
+        u.fn,
+        u.ln,
+        u.pn,
+        t.tn
+      FROM team_invites ti
+      JOIN users u ON u.id = ti.requester_id
+      LEFT JOIN members m ON m.uid = ti.requester_id
+      LEFT JOIN teams t ON t.id = m.tid
+      WHERE ti.token = ?
+      ORDER BY m.ja DESC
+      LIMIT 1`,
+      [req.params.token]
+    );
+
+    if (!inv) return res.status(404).json({ ok: false, msg: 'Invitation not found' });
+    if (inv.status !== 'pending') {
+      return res.status(400).json({ ok: false, msg: `Invitation already ${inv.status}` });
+    }
+    if (Date.parse(inv.expires_at) <= Date.now()) {
+      return res.status(400).json({ ok: false, msg: 'Invitation has expired' });
+    }
+
+    return res.json({
+      ok: true,
+      data: {
+        requesterId: inv.requester_id,
+        requesterName: `${inv.pn || inv.fn} ${inv.ln}`,
+        teamName: inv.tn || null,
+        expiresAt: inv.expires_at
+      }
+    });
+  } catch (e) {
+    console.error(e);
+    return res.status(500).json({ ok: false, msg: 'Error' });
+  }
+});
+
+rtr.post('/request/invite/:token/respond', async (req, res) => {
+  try {
+    await ensureTeamInviteTbl();
+    const action = String(req.body?.action || '').toLowerCase();
+    if (!['accept', 'decline'].includes(action)) {
+      return res.status(400).json({ ok: false, msg: 'Action must be accept or decline' });
+    }
+
+    const inv = await get(
+      `SELECT id, requester_id, recipient_id, status, expires_at
+       FROM team_invites
+       WHERE token = ?`,
+      [req.params.token]
+    );
+
+    if (!inv) return res.status(404).json({ ok: false, msg: 'Invitation not found' });
+    if (inv.status !== 'pending') {
+      return res.status(400).json({ ok: false, msg: `Invitation already ${inv.status}` });
+    }
+    if (Date.parse(inv.expires_at) <= Date.now()) {
+      await run("UPDATE team_invites SET status = 'expired', responded_at = CURRENT_TIMESTAMP WHERE id = ?", [inv.id]);
+      return res.status(400).json({ ok: false, msg: 'Invitation has expired' });
+    }
+
+    if (action === 'decline') {
+      await run("UPDATE team_invites SET status = 'declined', responded_at = CURRENT_TIMESTAMP WHERE id = ?", [inv.id]);
+      return res.json({ ok: true, msg: 'Invitation declined' });
+    }
+
+    const recipientTeam = await get(
+      `SELECT tid
+       FROM members
+       WHERE uid = ?
+       ORDER BY ja DESC
+       LIMIT 1`,
+      [inv.recipient_id]
+    );
+    if (recipientTeam) {
+      return res.status(400).json({ ok: false, msg: 'You are already on a team' });
+    }
+
+    const requesterTeam = await get(
+      `SELECT tid
+       FROM members
+       WHERE uid = ?
+       ORDER BY ja DESC
+       LIMIT 1`,
+      [inv.requester_id]
+    );
+    if (!requesterTeam) {
+      return res.status(400).json({ ok: false, msg: 'Requester is not currently on a team' });
+    }
+
+    await run('INSERT INTO members (uid, tid, rol) VALUES (?, ?, ?)', [inv.recipient_id, requesterTeam.tid, 'member']);
+    await run("UPDATE team_invites SET status = 'accepted', responded_at = CURRENT_TIMESTAMP WHERE id = ?", [inv.id]);
+
+    return res.json({ ok: true, msg: 'Invitation accepted. You were added to the team.', data: { tid: requesterTeam.tid } });
+  } catch (e) {
+    console.error(e);
+    return res.status(500).json({ ok: false, msg: 'Error' });
   }
 });
 

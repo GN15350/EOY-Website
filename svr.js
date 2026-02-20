@@ -38,7 +38,9 @@ app.listen(prt, '0.0.0.0', () => {
   console.log('  POST /api/usr/profile/pic');
   console.log('  GET  /api/usr/all');
   console.log('  GET  /api/usr/:id');
-  console.log('  POST /api/usr/request (CS1 only)\n');
+  console.log('  POST /api/usr/request (CS1 only)');
+  console.log('  GET  /api/usr/request/invite/:token');
+  console.log('  POST /api/usr/request/invite/:token/respond\n');
   console.log('  GET  /api/team/my');
   console.log('  GET  /api/team/all');
   console.log('  GET  /api/team/by-user/:uid');

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Team Request Confirmation</title>
+  <link rel="stylesheet" href="requestConfirm.css" />
+</head>
+<body>
+  <main class="card">
+    <h1>Team Invitation</h1>
+    <p id="invite-message">Loading invitation...</p>
+    <p id="invite-expiry" class="muted"></p>
+    <div class="actions">
+      <button id="accept-btn">Accept</button>
+      <button id="decline-btn" class="secondary">Decline</button>
+    </div>
+    <p id="status" class="status"></p>
+    <a id="return-link" href="login.html" style="display:none;">Go to login</a>
+  </main>
+
+  <script src="api.js?v=1"></script>
+  <script src="requestConfirm.js"></script>
+</body>
+</html>
