@@ -1,13 +1,13 @@
-tunnel: EOYWebTunnel
-credentials-file: C:\Users\julia\.cloudflared\20810fd8-7bec-4d7e-800e-27ab00d6252f.json
+tunnel: eoy-project
+credentials-file: C:\Users\julia\.cloudflared\19a5c862-f8a0-49ae-87cf-e41682f2a4eb.json
 
 ingress:
-  - hostname: api.frisco-cs.com
+  - hostname: eoyapi.monty.my
     service: http://127.0.0.1:3000
     originRequest:
       noTLSVerify: true
       connectTimeout: 30s
       http2Origin: false
       disableChunkedEncoding: true
-      httpHostHeader: api.frisco-cs
+      httpHostHeader: eoyapi.monty.my
   - service: http_status:404
