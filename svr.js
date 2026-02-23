@@ -2,6 +2,7 @@ const exp = require('express');
 const pth = require('path');
 const fs = require('fs');
 const cors = require('cors');
+require('dotenv').config();
 
 const app = exp();
 const prt = 3000;
