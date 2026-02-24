@@ -10,18 +10,11 @@ if (typeof dbModule.initDb !== 'function') {
   throw new Error('cfg/db.js must export initDb()');
 }
 
-var app = exp();
-var prt = Number(process.env.PORT) || 3000;
-var uploadsDir = process.env.UPLDS_DIR || './uplds';
 
 app.use(cors());
 app.use(exp.json());
 if (!fs.existsSync(upldsDir)) {
   fs.mkdirSync(upldsDir, { recursive: true });
-}
-
-if (!fs.existsSync(uploadsDir)) {
-  fs.mkdirSync(uploadsDir, { recursive: true });
 }
 
 var authRtr = require('./rts/auth').rtr;
