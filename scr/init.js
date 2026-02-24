@@ -1,11 +1,17 @@
 const sql3 = require('sqlite3').verbose();
 const pth = require('path');
+const fs = require('fs');
 
-const dbp = pth.join(__dirname, '..', 'db.sqlite');
+const dataDir = process.env.DATA_DIR || pth.join(__dirname, '..');
+if (!fs.existsSync(dataDir)) {
+  fs.mkdirSync(dataDir, { recursive: true });
+}
+
+const dbp = pth.join(dataDir, 'db.sqlite');
 const dbc = new sql3.Database(dbp);
 
 dbc.serialize(() => {
-  console.log('Creating tables...');
+  console.log(`Creating tables in ${dbp}...`);
 
   dbc.run('PRAGMA foreign_keys = ON');
 
