@@ -4,7 +4,7 @@ const bcr = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { qry, run, get } = require('../cfg/db');
 
-const sec = 'your_secret_key_12345';
+const sec = process.env.JWT_SECRET || 'your_secret_key_12345';
 
 // Register
 rtr.post('/register', async (req, res) => {
@@ -35,7 +35,7 @@ rtr.post('/register', async (req, res) => {
     res.json({ ok: true, tkn, uid: r.id });
   } catch (e) {
     console.error('Register error:', e);
-    res.status(500).json({ ok: false, msg: 'Server error during registration' });
+    res.status(500).json({ ok: false, msg: 'Server error during registration. Please try again in a moment.' });
   }
 });
 
@@ -65,7 +65,7 @@ rtr.post('/login', async (req, res) => {
     res.json({ ok: true, tkn, uid: u.id });
   } catch (e) {
     console.error(e);
-    res.status(500).json({ ok: false, msg: 'Error' });
+    res.status(500).json({ ok: false, msg: 'Server error during login. Please verify your account exists and try again.' });
   }
 });
 
