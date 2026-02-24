@@ -16,9 +16,9 @@ if (!fs.existsSync(upldsDir)) {
   fs.mkdirSync(upldsDir, { recursive: true });
 }
 
-const { rtr: authRtr } = require('./rts/auth');
-const usrRtr = require('./rts/usr');
-const teamRtr = require('./rts/team');
+var authRtr = require('./rts/auth').rtr;
+var usrRtr = require('./rts/usr');
+var teamRtr = require('./rts/team');
 
 app.use('/api/auth', authRtr);
 app.use('/api/usr', usrRtr);

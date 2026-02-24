@@ -1,99 +1,191 @@
-# Privacy Policy
+# EOY-Website
 
-Last Updated: Feb 24th 2026
+## Migrate from Cloudflared Tunnel to a Managed Backend Host (Render)
 
-## Introduction
-
-This website ("EOY Website") respects your privacy. This Privacy Policy explains what information we collect, how we use it, and how we protect it.
-
-By using this website, you agree to the collection and use of information in accordance with this policy.
+This project currently relies on a Cloudflared tunnel and a hardcoded tunnel API URL (`https://eoyapi.monty.my/api`).
+Render is the easiest reliable paid replacement for this stack.
 
 ---
 
-## Information We Collect
+## Why Render for this project
 
-We may collect the following information:
-
-- Name
-- Email address
-- Account credentials (stored securely and hashed)
-- Team or project-related information
-- Usage data (logs, IP addresses, browser info)
-
-We do not sell or rent your personal information.
+- Your backend is a single Node/Express process listening on port `3000`.
+- You use SQLite (`db.sqlite`) and local file uploads (`uplds/`), so you need persistent storage.
+- Render supports a simple web service + persistent disk model with minimal ops overhead.
 
 ---
 
-## How We Use Information
+## What you need before starting
 
-We use collected information to:
-
-- Provide and maintain user accounts
-- Authenticate users
-- Send notifications related to the platform
-- Improve performance and functionality
-- Maintain security and prevent abuse
+1. A Render account
+2. Your code in GitHub/GitLab (so Render can deploy from the repo)
+3. Your DNS provider access (for `eoyapi.monty.my`)
+4. A strong JWT secret value (generate a random 32+ char string)
 
 ---
 
-## Cookies and Sessions
+## Recommended production architecture
 
-We may use secure cookies or session storage to maintain login sessions.
-
-These are used only for authentication and platform functionality.
-
----
-
-## Data Security
-
-We implement reasonable security measures including:
-
-- Password hashing
-- HTTPS encryption
-- Server-side access controls
-
-However, no online system is 100% secure.
+- **Render Web Service** for the Node API
+- **Render Persistent Disk** mounted at `/var/data`
+- Store both DB and uploads on that disk:
+  - `/var/data/db.sqlite`
+  - `/var/data/uplds`
 
 ---
 
-## Third-Party Services
+## Exact setup steps
 
-This website may use:
+### 1) Update backend to use environment-based storage paths
 
-- Cloudflare (security and content delivery)
-- GitHub Pages (frontend hosting)
-- Email providers (for notifications)
+#### A. `cfg/db.js`
+Use `DATA_DIR` when present so SQLite stays on persistent storage.
 
-These services may collect limited technical data as required for operation.
+Replace:
+
+```js
+const dbp = pth.join(__dirname, '..', 'db.sqlite');
+```
+
+With:
+
+```js
+const dataDir = process.env.DATA_DIR || pth.join(__dirname, '..');
+const dbp = pth.join(dataDir, 'db.sqlite');
+```
+
+#### B. `svr.js`
+Use a configurable uploads directory.
+
+Add near top:
+
+```js
+const upldsDir = process.env.UPLDS_DIR || './uplds';
+```
+
+Change static + directory creation to:
+
+```js
+app.use('/uplds', exp.static(upldsDir));
+
+if (!fs.existsSync(upldsDir)) {
+  fs.mkdirSync(upldsDir, { recursive: true });
+}
+```
+
+#### C. `rts/auth.js`
+Replace hardcoded JWT secret with env var.
+
+Replace:
+
+```js
+const sec = 'your_secret_key_12345';
+```
+
+With:
+
+```js
+const sec = process.env.JWT_SECRET;
+if (!sec) {
+  throw new Error('JWT_SECRET is required');
+}
+```
+
+#### D. `api.js`
+Change the production API URL to your Render/custom API domain.
+
+Replace:
+
+```js
+return 'https://eoyapi.monty.my/api';
+```
+
+With your final API base, for example:
+
+```js
+return 'https://api.your-domain.com/api';
+```
+
+(You can keep `eoyapi.monty.my` if you point it to Render.)
 
 ---
 
-## Data Retention
+### 2) Create the Render Web Service
 
-We retain user data as long as necessary to provide services or comply with legal obligations.
-
----
-
-## Your Rights
-
-You may request:
-
-- Access to your data
-- Correction of inaccurate data
-- Deletion of your account
-
-Contact: Julian.Montgomery.857@k12.friscoisd.org
-
----
-
-## Changes to This Policy
-
-We may update this Privacy Policy periodically. Updates will be posted on this page.
+1. In Render dashboard: **New +** → **Web Service**
+2. Connect your repo
+3. Configure:
+   - **Runtime**: Node
+   - **Build Command**: `npm install`
+   - **Start Command**: `npm start`
+   - **Plan**: Paid plan recommended for always-on + reliability
+4. Add environment variables:
+   - `NODE_ENV=production`
+   - `DATA_DIR=/var/data`
+   - `UPLDS_DIR=/var/data/uplds`
+   - `JWT_SECRET=<your-random-secret>`
+5. Add a **Persistent Disk**:
+   - Mount path: `/var/data`
+   - Size: start 1GB+
 
 ---
 
-## Contact
+### 3) Point DNS to Render
 
-For privacy-related concerns, contact:
+1. In Render, add custom domain `eoyapi.monty.my` (or preferred API subdomain)
+2. Render provides DNS target(s) (usually CNAME)
+3. In your DNS provider, create/update records exactly as Render shows
+4. Wait for certificate issuance and DNS propagation
 
-Julian.Montgomery.857@k12.friscoisd.org
+---
+
+### 4) Deploy and verify
+
+After deployment, verify:
+
+- `GET https://<your-api-domain>/api/health` returns `{ "ok": true }`
+- Registration/login works
+- Image/file uploads succeed and persist after a redeploy
+
+Quick checks:
+
+1. Upload a profile picture
+2. Redeploy service in Render
+3. Refresh profile; uploaded file should still exist
+
+---
+
+
+## Render crash fix: "Identifier 'upldsDir' has already been declared"
+
+If Render logs show:
+
+```
+SyntaxError: Identifier 'upldsDir' has already been declared
+```
+
+Do this:
+
+1. Make sure `svr.js` contains only one uploads path variable declaration and it matches current code in this repo (`uploadsDir`).
+2. Push the latest commit and trigger a **Manual Deploy > Clear build cache & deploy** in Render.
+3. Confirm env vars are set exactly:
+   - `DATA_DIR=/var/data`
+   - `UPLDS_DIR=/var/data/uplds`
+   - `JWT_SECRET=<long-random-secret>`
+4. Verify health endpoint returns JSON with `ok`, `db`, and `uploads`.
+5. Important: this error is a JavaScript syntax issue in `svr.js`, not an environment-variable value issue. If it still appears, Render is deploying an older commit/branch or cached artifact; use **Clear build cache & deploy** and confirm the startup log prints `Render commit:` for the commit you just pushed.
+
+## Security and reliability checklist
+
+- [ ] `JWT_SECRET` is set and not hardcoded in code
+- [ ] CORS is restricted to your frontend domain(s)
+- [ ] Persistent disk mounted and paths point to `/var/data`
+- [ ] API domain switched from Cloudflared URL to Render domain
+- [ ] Backups enabled (manual copy of SQLite file at minimum)
+
+---
+
+## Recommended next upgrade (optional)
+
+When you have time, migrate from SQLite to managed Postgres for better concurrency and backup tooling. You can still launch now with SQLite + persistent disk, then migrate later.
+
