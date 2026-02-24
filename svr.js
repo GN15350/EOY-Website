@@ -1,44 +1,54 @@
 const exp = require('express');
+const pth = require('path');
 const fs = require('fs');
 const cors = require('cors');
 const upldsDir = process.env.UPLDS_DIR || './uplds';
 const app = exp();
-const prt = Number(process.env.PORT) || 3000;
+const prt = 3000;
 
-
+// CORS is handled by Cloudflare Transform Rules
+// In local dev we still need CORS to allow the frontend to hit the API.
 app.use(cors());
+
 app.use(exp.json());
 if (!fs.existsSync(upldsDir)) {
   fs.mkdirSync(upldsDir, { recursive: true });
 }
 
-if (!fs.existsSync(upldsDir)) {
-  fs.mkdirSync(upldsDir, { recursive: true });
+if (!fs.existsSync('./uplds')) {
+  fs.mkdirSync('./uplds');
 }
 
-var authRtr = require('./rts/auth').rtr;
-var usrRtr = require('./rts/usr');
-var teamRtr = require('./rts/team');
+const { rtr: authRtr } = require('./rts/auth');
+const usrRtr = require('./rts/usr');
+const teamRtr = require('./rts/team');
 
 app.use('/api/auth', authRtr);
 app.use('/api/usr', usrRtr);
 app.use('/api/team', teamRtr);
 app.get('/api/health', (req, res) => {
-  res.json({ ok: true, db: dbp });
+  res.json({ ok: true });
 });
 
-const start = async () => {
-  try {
-    await initDb();
-    app.listen(prt, '0.0.0.0', () => {
-      console.log(`\n✅ Server running on port ${prt}\n`);
-      console.log(`DB: ${dbp}`);
-      console.log(`Uploads: ${upldsDir}`);
-    });
-  } catch (e) {
-    console.error('Failed to initialize database:', e);
-    process.exit(1);
-  }
-};
-
-start();
+app.listen(prt, '0.0.0.0', () => {
+  console.log(`\n✅ Server running on port ${prt}\n`);
+  console.log('Endpoints:');
+  console.log('  POST /api/auth/register');
+  console.log('  POST /api/auth/login');
+  console.log('  GET  /api/usr/profile');
+  console.log('  PUT  /api/usr/profile');
+  console.log('  POST /api/usr/profile/pic');
+  console.log('  GET  /api/usr/all');
+  console.log('  GET  /api/usr/:id');
+  console.log('  POST /api/usr/request (CS1 only)');
+  console.log('  GET  /api/usr/request/invite/:token');
+  console.log('  POST /api/usr/request/invite/:token/respond\n');
+  console.log('  GET  /api/team/my');
+  console.log('  GET  /api/team/all');
+  console.log('  GET  /api/team/by-user/:uid');
+  console.log('  GET  /api/team/:id');
+  console.log('  POST /api/team');
+  console.log('  PUT  /api/team/:id/meta\n');
+  console.log('  DELETE /api/team/:id (admin only)');
+  console.log('  DELETE /api/team/:tid/member/:uid (admin only)\n');
+});
