@@ -34,4 +34,4 @@ const get = (s, p = []) => {
   });
 };
 
-module.exports = { dbc, qry, run, get };
+module.exports = { dbc, qry, run, get, dbp };
