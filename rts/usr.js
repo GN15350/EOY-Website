@@ -213,116 +213,6 @@ rtr.get('/all', vrf, async (req, res) => {
   }
 });
 
-rtr.get('/request/invite/:token', async (req, res) => {
-  try {
-    await ensureTeamInviteTbl();
-    const inv = await get(
-      `SELECT
-        ti.id,
-        ti.requester_id,
-        ti.recipient_id,
-        ti.status,
-        ti.expires_at,
-        u.fn,
-        u.ln,
-        u.pn,
-        t.tn
-      FROM team_invites ti
-      JOIN users u ON u.id = ti.requester_id
-      LEFT JOIN members m ON m.uid = ti.requester_id
-      LEFT JOIN teams t ON t.id = m.tid
-      WHERE ti.token = ?
-      ORDER BY m.ja DESC
-      LIMIT 1`,
-      [req.params.token]
-    );
-
-    if (!inv) return res.status(404).json({ ok: false, msg: 'Invitation not found' });
-    if (inv.status !== 'pending') {
-      return res.status(400).json({ ok: false, msg: `Invitation already ${inv.status}` });
-    }
-    if (Date.parse(inv.expires_at) <= Date.now()) {
-      return res.status(400).json({ ok: false, msg: 'Invitation has expired' });
-    }
-
-    return res.json({
-      ok: true,
-      data: {
-        requesterId: inv.requester_id,
-        requesterName: `${inv.pn || inv.fn} ${inv.ln}`,
-        teamName: inv.tn || null,
-        expiresAt: inv.expires_at
-      }
-    });
-  } catch (e) {
-    console.error(e);
-    return res.status(500).json({ ok: false, msg: 'Error' });
-  }
-});
-
-rtr.post('/request/invite/:token/respond', async (req, res) => {
-  try {
-    await ensureTeamInviteTbl();
-    const action = String(req.body?.action || '').toLowerCase();
-    if (!['accept', 'decline'].includes(action)) {
-      return res.status(400).json({ ok: false, msg: 'Action must be accept or decline' });
-    }
-
-    const inv = await get(
-      `SELECT id, requester_id, recipient_id, status, expires_at
-       FROM team_invites
-       WHERE token = ?`,
-      [req.params.token]
-    );
-
-    if (!inv) return res.status(404).json({ ok: false, msg: 'Invitation not found' });
-    if (inv.status !== 'pending') {
-      return res.status(400).json({ ok: false, msg: `Invitation already ${inv.status}` });
-    }
-    if (Date.parse(inv.expires_at) <= Date.now()) {
-      await run("UPDATE team_invites SET status = 'expired', responded_at = CURRENT_TIMESTAMP WHERE id = ?", [inv.id]);
-      return res.status(400).json({ ok: false, msg: 'Invitation has expired' });
-    }
-
-    if (action === 'decline') {
-      await run("UPDATE team_invites SET status = 'declined', responded_at = CURRENT_TIMESTAMP WHERE id = ?", [inv.id]);
-      return res.json({ ok: true, msg: 'Invitation declined' });
-    }
-
-    const recipientTeam = await get(
-      `SELECT tid
-       FROM members
-       WHERE uid = ?
-       ORDER BY ja DESC
-       LIMIT 1`,
-      [inv.recipient_id]
-    );
-    if (recipientTeam) {
-      return res.status(400).json({ ok: false, msg: 'You are already on a team' });
-    }
-
-    const requesterTeam = await get(
-      `SELECT tid
-       FROM members
-       WHERE uid = ?
-       ORDER BY ja DESC
-       LIMIT 1`,
-      [inv.requester_id]
-    );
-    if (!requesterTeam) {
-      return res.status(400).json({ ok: false, msg: 'Requester is not currently on a team' });
-    }
-
-    await run('INSERT INTO members (uid, tid, rol) VALUES (?, ?, ?)', [inv.recipient_id, requesterTeam.tid, 'member']);
-    await run("UPDATE team_invites SET status = 'accepted', responded_at = CURRENT_TIMESTAMP WHERE id = ?", [inv.id]);
-
-    return res.json({ ok: true, msg: 'Invitation accepted. You were added to the team.', data: { tid: requesterTeam.tid } });
-  } catch (e) {
-    console.error(e);
-    return res.status(500).json({ ok: false, msg: 'Error' });
-  }
-});
-
 // Get requested members by user ID
 rtr.get('/:id/requests', vrf, async (req, res) => {
   try {
@@ -483,5 +373,115 @@ rtr.post('/request', vrf, async (req, res) => {
   }
 });
 
+
+rtr.get('/request/invite/:token', async (req, res) => {
+  try {
+    await ensureTeamInviteTbl();
+    const inv = await get(
+      `SELECT
+        ti.id,
+        ti.requester_id,
+        ti.recipient_id,
+        ti.status,
+        ti.expires_at,
+        u.fn,
+        u.ln,
+        u.pn,
+        t.tn
+      FROM team_invites ti
+      JOIN users u ON u.id = ti.requester_id
+      LEFT JOIN members m ON m.uid = ti.requester_id
+      LEFT JOIN teams t ON t.id = m.tid
+      WHERE ti.token = ?
+      ORDER BY m.ja DESC
+      LIMIT 1`,
+      [req.params.token]
+    );
+
+    if (!inv) return res.status(404).json({ ok: false, msg: 'Invitation not found' });
+    if (inv.status !== 'pending') {
+      return res.status(400).json({ ok: false, msg: `Invitation already ${inv.status}` });
+    }
+    if (Date.parse(inv.expires_at) <= Date.now()) {
+      return res.status(400).json({ ok: false, msg: 'Invitation has expired' });
+    }
+
+    return res.json({
+      ok: true,
+      data: {
+        requesterId: inv.requester_id,
+        requesterName: `${inv.pn || inv.fn} ${inv.ln}`,
+        teamName: inv.tn || null,
+        expiresAt: inv.expires_at
+      }
+    });
+  } catch (e) {
+    console.error(e);
+    return res.status(500).json({ ok: false, msg: 'Error' });
+  }
+});
+
+rtr.post('/request/invite/:token/respond', async (req, res) => {
+  try {
+    await ensureTeamInviteTbl();
+    const action = String(req.body?.action || '').toLowerCase();
+    if (!['accept', 'decline'].includes(action)) {
+      return res.status(400).json({ ok: false, msg: 'Action must be accept or decline' });
+    }
+
+    const inv = await get(
+      `SELECT id, requester_id, recipient_id, status, expires_at
+       FROM team_invites
+       WHERE token = ?`,
+      [req.params.token]
+    );
+
+    if (!inv) return res.status(404).json({ ok: false, msg: 'Invitation not found' });
+    if (inv.status !== 'pending') {
+      return res.status(400).json({ ok: false, msg: `Invitation already ${inv.status}` });
+    }
+    if (Date.parse(inv.expires_at) <= Date.now()) {
+      await run("UPDATE team_invites SET status = 'expired', responded_at = CURRENT_TIMESTAMP WHERE id = ?", [inv.id]);
+      return res.status(400).json({ ok: false, msg: 'Invitation has expired' });
+    }
+
+    if (action === 'decline') {
+      await run("UPDATE team_invites SET status = 'declined', responded_at = CURRENT_TIMESTAMP WHERE id = ?", [inv.id]);
+      return res.json({ ok: true, msg: 'Invitation declined' });
+    }
+
+    const recipientTeam = await get(
+      `SELECT tid
+       FROM members
+       WHERE uid = ?
+       ORDER BY ja DESC
+       LIMIT 1`,
+      [inv.recipient_id]
+    );
+    if (recipientTeam) {
+      return res.status(400).json({ ok: false, msg: 'You are already on a team' });
+    }
+
+    const requesterTeam = await get(
+      `SELECT tid
+       FROM members
+       WHERE uid = ?
+       ORDER BY ja DESC
+       LIMIT 1`,
+      [inv.requester_id]
+    );
+    if (!requesterTeam) {
+      return res.status(400).json({ ok: false, msg: 'Requester is not currently on a team' });
+    }
+
+    await run('INSERT INTO members (uid, tid, rol) VALUES (?, ?, ?)', [inv.recipient_id, requesterTeam.tid, 'member']);
+    await run("UPDATE team_invites SET status = 'accepted', responded_at = CURRENT_TIMESTAMP WHERE id = ?", [inv.id]);
+
+    return res.json({ ok: true, msg: 'Invitation accepted. You were added to the team.', data: { tid: requesterTeam.tid } });
+  } catch (e) {
+    console.error(e);
+    return res.status(500).json({ ok: false, msg: 'Error' });
+  }
+});
 
 module.exports = rtr;
