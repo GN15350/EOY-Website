@@ -4,7 +4,8 @@
   "main": "svr.js",
   "scripts": {
     "start": "node svr.js",
-    "db": "node scr/init.js"
+    "db": "node scr/init.js",
+    "prestart": "node scripts/prestart-check.js"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",

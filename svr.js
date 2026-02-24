@@ -1,53 +1,50 @@
-const exp = require('express');
-const pth = require('path');
-const fs = require('fs');
-const cors = require('cors');
+var exp = require('express');
+var fs = require('fs');
+var cors = require('cors');
 require('dotenv').config();
 
-const app = exp();
-const prt = 3000;
+var dbp = require('./cfg/db').dbp;
 
-// CORS is handled by Cloudflare Transform Rules
-// In local dev we still need CORS to allow the frontend to hit the API.
-app.use(cors());
-
-app.use(exp.json());
-app.use('/uplds', exp.static('uplds'));
-
-if (!fs.existsSync('./uplds')) {
-  fs.mkdirSync('./uplds');
+if (typeof require('./cfg/db').initDb !== 'function') {
+  throw new Error('cfg/db.js must export initDb()');
 }
 
-const { rtr: authRtr } = require('./rts/auth');
-const usrRtr = require('./rts/usr');
-const teamRtr = require('./rts/team');
+var app = exp();
+var prt = Number(process.env.PORT) || 3000;
+var uploadsDir = process.env.UPLDS_DIR || './uplds';
+
+app.use(cors());
+app.use(exp.json());
+app.use('/uplds', exp.static(uploadsDir));
+
+if (!fs.existsSync(uploadsDir)) {
+  fs.mkdirSync(uploadsDir, { recursive: true });
+}
+
+var authRtr = require('./rts/auth').rtr;
+var usrRtr = require('./rts/usr');
+var teamRtr = require('./rts/team');
 
 app.use('/api/auth', authRtr);
 app.use('/api/usr', usrRtr);
 app.use('/api/team', teamRtr);
-app.get('/api/health', (req, res) => {
-  res.json({ ok: true });
+app.get('/api/health', function(req, res) {
+  res.json({ ok: true, db: dbp, uploads: uploadsDir });
 });
 
-app.listen(prt, '0.0.0.0', () => {
-  console.log(`\n✅ Server running on port ${prt}\n`);
-  console.log('Endpoints:');
-  console.log('  POST /api/auth/register');
-  console.log('  POST /api/auth/login');
-  console.log('  GET  /api/usr/profile');
-  console.log('  PUT  /api/usr/profile');
-  console.log('  POST /api/usr/profile/pic');
-  console.log('  GET  /api/usr/all');
-  console.log('  GET  /api/usr/:id');
-  console.log('  POST /api/usr/request (CS1 only)');
-  console.log('  GET  /api/usr/request/invite/:token');
-  console.log('  POST /api/usr/request/invite/:token/respond\n');
-  console.log('  GET  /api/team/my');
-  console.log('  GET  /api/team/all');
-  console.log('  GET  /api/team/by-user/:uid');
-  console.log('  GET  /api/team/:id');
-  console.log('  POST /api/team');
-  console.log('  PUT  /api/team/:id/meta\n');
-  console.log('  DELETE /api/team/:id (admin only)');
-  console.log('  DELETE /api/team/:tid/member/:uid (admin only)\n');
-});
+(async function boot() {
+  try {
+    await require('./cfg/db').initDb();
+    app.listen(prt, '0.0.0.0', function() {
+      console.log(`\n✅ Server running on port ${prt}\n`);
+      console.log(`DB: ${dbp}`);
+      console.log(`Uploads: ${uploadsDir}`);
+      if (process.env.RENDER_GIT_COMMIT) {
+        console.log(`Render commit: ${process.env.RENDER_GIT_COMMIT}`);
+      }
+    });
+  } catch (e) {
+    console.error('Failed to initialize database:', e);
+    process.exit(1);
+  }
+})();
