@@ -50,23 +50,16 @@ function updateSectionNav() {
   sections.forEach((section, index) => {
     section.classList.toggle('is-active', index === activeSection);
   });
-
   arrowLeft?.classList.toggle('arrow-disabled', activeSection === 0);
   arrowRight?.classList.toggle('arrow-disabled', activeSection === sections.length - 1);
 }
 
 arrowLeft?.addEventListener('click', () => {
-  if (activeSection > 0) {
-    activeSection -= 1;
-    updateSectionNav();
-  }
+  if (activeSection > 0) { activeSection -= 1; updateSectionNav(); }
 });
 
 arrowRight?.addEventListener('click', () => {
-  if (activeSection < sections.length - 1) {
-    activeSection += 1;
-    updateSectionNav();
-  }
+  if (activeSection < sections.length - 1) { activeSection += 1; updateSectionNav(); }
 });
 
 updateSectionNav();
@@ -78,11 +71,8 @@ function userName(u) {
 function setSidebarUser(u) {
   const nm = document.querySelector('.side-panel .name');
   if (nm) nm.textContent = userName(u);
-
   const img = document.querySelector('.side-panel .profile-image');
-  if (img) {
-    img.src = u.pp ? api.getAssetUrl(u.pp) : 'elements/pfpimage.png';
-  }
+  if (img) img.src = u.pp ? api.getAssetUrl(u.pp) : 'elements/pfpimage.png';
 }
 
 function openProfile(uid) {
@@ -90,29 +80,9 @@ function openProfile(uid) {
   window.location.href = 'profile.html';
 }
 
-function getChecklistKey(tid) {
-  return `teamChecklist:${tid}`;
-}
+// ─── Status history — unchanged, still uses localStorage ─────────────────────
 
-function getStatusHistoryKey(tid) {
-  return `teamStatusHistory:${tid}`;
-}
-
-function loadChecklist(tid) {
-  try {
-    const raw = localStorage.getItem(getChecklistKey(tid));
-    if (!raw) return [];
-    const parsed = JSON.parse(raw);
-    return Array.isArray(parsed) ? parsed : [];
-  } catch (_) {
-    return [];
-  }
-}
-
-function saveChecklist() {
-  if (!currTeam) return;
-  localStorage.setItem(getChecklistKey(currTeam.id), JSON.stringify(checklist));
-}
+function getStatusHistoryKey(tid) { return `teamStatusHistory:${tid}`; }
 
 function loadStatusHistory(tid) {
   try {
@@ -120,9 +90,7 @@ function loadStatusHistory(tid) {
     if (!raw) return [];
     const parsed = JSON.parse(raw);
     return Array.isArray(parsed) ? parsed : [];
-  } catch (_) {
-    return [];
-  }
+  } catch (_) { return []; }
 }
 
 function saveStatusHistory() {
@@ -130,11 +98,47 @@ function saveStatusHistory() {
   localStorage.setItem(getStatusHistoryKey(currTeam.id), JSON.stringify(statusHistory));
 }
 
+// ─── Checklist — DB-backed ────────────────────────────────────────────────────
+
+async function fetchChecklist(tid) {
+  try {
+    const res = await api.req(`/usr/checklist/${tid}`);
+    if (res.ok) {
+      checklist = res.data.map(item => ({ id: item.id, text: item.text, done: !!item.checked }));
+    }
+  } catch (e) {
+    console.error('Could not load checklist:', e);
+    checklist = [];
+  }
+}
+
+async function addChecklistItem(text) {
+  const res = await api.req(`/usr/checklist/${currTeam.id}`, {
+    m: 'POST',
+    body: { text }
+  });
+  if (res.ok) {
+    checklist.push({ id: res.data.id, text: res.data.text, done: false });
+    renderChecklist();
+  }
+}
+
+async function toggleChecklistItem(item, done) {
+  item.done = done;
+  await api.req(`/usr/checklist/${item.id}`, { m: 'PATCH', body: { checked: done } });
+}
+
+async function deleteChecklistItem(item) {
+  await api.req(`/usr/checklist/${item.id}`, { m: 'DELETE' });
+  checklist = checklist.filter(i => i.id !== item.id);
+}
+
+// ─── Render ───────────────────────────────────────────────────────────────────
+
 function renderMembers(members) {
   const grid = document.querySelector('.memberGrid');
   if (!grid) return;
   grid.innerHTML = '';
-
   members.forEach((m) => {
     const blk = document.createElement('div');
     blk.className = 'memberBlock';
@@ -167,29 +171,27 @@ function renderChecklist() {
 
   block.innerHTML = '<p class="checklistTitle">Checklist</p>';
 
-  checklist.forEach((item, index) => {
+  checklist.forEach((item) => {
     const row = document.createElement('label');
     row.className = 'checklistP';
 
     const cb = document.createElement('input');
     cb.type = 'checkbox';
     cb.checked = !!item.done;
-    cb.addEventListener('change', () => {
-      checklist[index].done = cb.checked;
-      saveChecklist();
 
+    cb.addEventListener('change', async () => {
       const existingTimer = checklistRemoveTimers.get(item);
       if (existingTimer) {
         clearTimeout(existingTimer);
         checklistRemoveTimers.delete(item);
       }
 
+      await toggleChecklistItem(item, cb.checked);
+
       if (cb.checked) {
-        const timeoutId = setTimeout(() => {
-          const itemIndex = checklist.indexOf(item);
-          if (itemIndex !== -1 && checklist[itemIndex].done) {
-            checklist.splice(itemIndex, 1);
-            saveChecklist();
+        const timeoutId = setTimeout(async () => {
+          if (item.done) {
+            await deleteChecklistItem(item);
             renderChecklist();
           }
         }, 2500);
@@ -211,12 +213,11 @@ function renderChecklist() {
   plus.className = 'plusC';
   plus.style.cursor = 'pointer';
   plus.title = 'Add checklist item';
-  plus.addEventListener('click', () => {
+  plus.addEventListener('click', async () => {
+    if (!currTeam) return;
     const val = prompt('Add checklist item:');
     if (!val || !val.trim()) return;
-    checklist.push({ text: val.trim(), done: false });
-    saveChecklist();
-    renderChecklist();
+    await addChecklistItem(val.trim());
   });
   block.appendChild(plus);
 }
@@ -224,8 +225,7 @@ function renderChecklist() {
 function renderStatus() {
   const statusP = document.querySelector('.statusP');
   if (statusP) {
-    const newest = statusHistory[0];
-    statusP.textContent = newest || currTeam?.meta?.gl || 'No status updates yet.';
+    statusP.textContent = statusHistory[0] || currTeam?.meta?.gl || 'No status updates yet.';
   }
 
   const plus = document.querySelector('.plusS');
@@ -241,11 +241,7 @@ function renderStatus() {
     if (currTeam && currUsr && currTeam.lid === currUsr.id) {
       await api.req(`/team/${currTeam.id}/meta`, {
         m: 'PUT',
-        body: {
-          pn: currTeam.meta?.pn || '',
-          pd: currTeam.meta?.pd || '',
-          gl: val.trim()
-        }
+        body: { pn: currTeam.meta?.pn || '', pd: currTeam.meta?.pd || '', gl: val.trim() }
       });
     }
 
@@ -259,11 +255,9 @@ function renderHistoryPopup() {
   const historyBtn = document.querySelector('.history');
   if (!popup || !historyBtn) return;
 
-  if (statusHistory.length === 0) {
-    popup.innerHTML = '<div class="history-item">No status history yet.</div>';
-  } else {
-    popup.innerHTML = statusHistory.map((s) => `<div class="history-item">${s}</div>`).join('');
-  }
+  popup.innerHTML = statusHistory.length === 0
+    ? '<div class="history-item">No status history yet.</div>'
+    : statusHistory.map((s) => `<div class="history-item">${s}</div>`).join('');
 
   historyBtn.onclick = () => {
     historyPopupOpen = !historyPopupOpen;
@@ -272,7 +266,7 @@ function renderHistoryPopup() {
   };
 }
 
-function renderTeam(team) {
+async function renderTeam(team) {
   const title = document.querySelector('.section1 .title');
   const title2 = document.querySelector('.section2 .title2');
   const projectTitle = document.querySelector('.projectTitle');
@@ -295,13 +289,14 @@ function renderTeam(team) {
   if (title) title.textContent = (team.tn || 'TEAM').toUpperCase();
   if (title2) title2.textContent = (team.tn || 'TEAM').toUpperCase();
   if (projectTitle) projectTitle.textContent = team.meta?.pn || 'PROJECT NAME';
-  if (projectDescription) {
-    projectDescription.textContent = team.meta?.pd || 'No project description yet.';
-  }
+  if (projectDescription) projectDescription.textContent = team.meta?.pd || 'No project description yet.';
 
   renderMembers(team.members || []);
-  checklist = loadChecklist(team.id);
+
+  // Checklist from DB, status history from localStorage (unchanged)
+  await fetchChecklist(team.id);
   statusHistory = loadStatusHistory(team.id);
+
   renderChecklist();
   renderStatus();
   renderHistoryPopup();
@@ -312,7 +307,6 @@ async function init() {
     window.location.href = 'login.html';
     return;
   }
-
   try {
     const meRes = await api.req('/usr/profile');
     if (!meRes.ok) return;
@@ -326,7 +320,7 @@ async function init() {
     const teamRes = await api.req('/team/my');
     if (!teamRes.ok) return;
     currTeam = teamRes.data;
-    renderTeam(currTeam);
+    await renderTeam(currTeam);
   } catch (e) {
     console.error(e);
   }

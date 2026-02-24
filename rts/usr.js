@@ -373,6 +373,7 @@ rtr.post('/request', vrf, async (req, res) => {
   }
 });
 
+
 rtr.get('/request/invite/:token', async (req, res) => {
   try {
     await ensureTeamInviteTbl();
