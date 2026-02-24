@@ -4,7 +4,7 @@ const cors = require('cors');
 const upldsDir = process.env.UPLDS_DIR || './uplds';
 const app = exp();
 const prt = Number(process.env.PORT) || 3000;
-const upldsDir = process.env.UPLDS_DIR || './uplds';
+
 
 app.use(cors());
 app.use(exp.json());
