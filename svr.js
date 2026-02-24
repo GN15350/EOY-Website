@@ -1,10 +1,10 @@
-var exp = require('express');
-var fs = require('fs');
-var cors = require('cors');
-require('dotenv').config();
-
-var dbModule = require('./cfg/db');
-var dbp = dbModule.dbp;
+const exp = require('express');
+const pth = require('path');
+const fs = require('fs');
+const cors = require('cors');
+const upldsDir = process.env.UPLDS_DIR || './uplds';
+const app = exp();
+const prt = 3000;
 
 if (typeof dbModule.initDb !== 'function') {
   throw new Error('cfg/db.js must export initDb()');
@@ -16,7 +16,9 @@ var uploadsDir = process.env.UPLDS_DIR || './uplds';
 
 app.use(cors());
 app.use(exp.json());
-app.use('/uplds', exp.static(uploadsDir));
+if (!fs.existsSync(upldsDir)) {
+  fs.mkdirSync(upldsDir, { recursive: true });
+}
 
 if (!fs.existsSync(uploadsDir)) {
   fs.mkdirSync(uploadsDir, { recursive: true });
@@ -33,21 +35,5 @@ app.get('/api/health', function(req, res) {
   res.json({ ok: true, db: dbp, uploads: uploadsDir });
 });
 
-(async function boot() {
-  try {
-    await dbModule.initDb();
-    app.listen(prt, '0.0.0.0', function() {
-      console.log(`
-✅ Server running on port ${prt}
-`);
-      console.log(`DB: ${dbp}`);
-      console.log(`Uploads: ${uploadsDir}`);
-      if (process.env.RENDER_GIT_COMMIT) {
-        console.log(`Render commit: ${process.env.RENDER_GIT_COMMIT}`);
-      }
-    });
-  } catch (e) {
-    console.error('Failed to initialize database:', e);
-    process.exit(1);
-  }
-})();
+
+start();
