@@ -1,7 +1,8 @@
 const sql3 = require('sqlite3').verbose();
 const pth = require('path');
 
-const dbp = pth.join(__dirname, '..', 'db.sqlite');
+const dataDir = process.env.DATA_DIR || pth.join(__dirname, '..');
+const dbp = pth.join(dataDir, 'db.sqlite');
 const dbc = new sql3.Database(dbp);
 
 dbc.run('PRAGMA foreign_keys = ON');

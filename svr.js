@@ -2,7 +2,7 @@ const exp = require('express');
 const pth = require('path');
 const fs = require('fs');
 const cors = require('cors');
-
+const upldsDir = process.env.UPLDS_DIR || './uplds';
 const app = exp();
 const prt = 3000;
 
@@ -11,7 +11,9 @@ const prt = 3000;
 app.use(cors());
 
 app.use(exp.json());
-app.use('/uplds', exp.static('uplds'));
+if (!fs.existsSync(upldsDir)) {
+  fs.mkdirSync(upldsDir, { recursive: true });
+}
 
 if (!fs.existsSync('./uplds')) {
   fs.mkdirSync('./uplds');
