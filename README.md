@@ -175,15 +175,6 @@ Do this:
 4. Verify health endpoint returns JSON with `ok`, `db`, and `uploads`.
 5. Important: this error is a JavaScript syntax issue in `svr.js`, not an environment-variable value issue. If it still appears, Render is deploying an older commit/branch or cached artifact; use **Clear build cache & deploy** and confirm the startup log prints `Render commit:` for the commit you just pushed.
 
-
-## Common remaining failure points (if it still crashes)
-
-1. **Render is deploying a different branch** (your logs showed `Checking out ... in branch Test1`). Ensure the Render service branch matches where fixes were pushed.
-2. **Cached artifact/stale source** still contains `const upldsDir ...` even after code updates. Use **Manual Deploy → Clear build cache & deploy**.
-3. **Duplicate declarations in merged file** from conflict resolution. The new `prestart` check now fails early with line numbers before `node svr.js` runs.
-4. **Wrong start command or root directory** in Render (must run from repo root with `npm start`, and `svr.js` must be the same file you changed).
-5. **Environment variables missing in the selected environment** (Preview vs Production values can differ). Verify `UPLDS_DIR`, `DATA_DIR`, and `JWT_SECRET` in the active environment.
-
 ## Security and reliability checklist
 
 - [ ] `JWT_SECRET` is set and not hardcoded in code

@@ -9,7 +9,7 @@ const api = {
         return 'http://127.0.0.1:3000/api';
       }
     } catch (_) {}
-    return 'https://eoyapi.monty.my/api';
+    return 'https://api.frisco-cs.com/api';
   })(),
 
   getAssetUrl(assetPath) {
