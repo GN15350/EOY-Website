@@ -2,7 +2,7 @@ const exp = require('express');
 const fs = require('fs');
 const cors = require('cors');
 
-const { initDb, dbp } = require('./cfg/db');
+const { dbp } = require('./cfg/db');
 
 const app = exp();
 const prt = Number(process.env.PORT) || 3000;
@@ -30,18 +30,8 @@ app.get('/api/health', (req, res) => {
   res.json({ ok: true, db: dbp, uploads: upldsDir });
 });
 
-const start = async () => {
-  try {
-    await initDb();
-    app.listen(prt, '0.0.0.0', () => {
-      console.log(`\n✅ Server running on port ${prt}\n`);
-      console.log(`DB: ${dbp}`);
-      console.log(`Uploads: ${upldsDir}`);
-    });
-  } catch (e) {
-    console.error('Failed to initialize database:', e);
-    process.exit(1);
-  }
-};
-
-start();
+app.listen(prt, '0.0.0.0', () => {
+  console.log(`\n✅ Server running on port ${prt}\n`);
+  console.log(`DB: ${dbp}`);
+  console.log(`Uploads: ${upldsDir}`);
+});
